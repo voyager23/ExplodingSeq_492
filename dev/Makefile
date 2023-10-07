@@ -1,5 +1,8 @@
 # makefile for dev folder
 
+rw : rw_mpz_t.cxx
+	g++ rw_mpz_t.cxx -lgmp -o ../bin/rw_mpz_t
+	
 limit : limit.cxx
 	g++ -std=c++17 limit.cxx -o ../bin/limit 
 
