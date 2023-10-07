@@ -24,28 +24,39 @@
 
 #include <iostream>
 #include <fstream>
+#include <cstdint>
 #include <gmpxx.h>
 
 using namespace std;
 int main(int argc, char **argv)
 {
-  mpz_class a, b, c;
+	mpz_class a, b, c;
 
-  a = 1000001001;
-  b = "-5678";
-  c = a+b;
-    
-  ofstream fout;
-  fout.open ("c++_mpz");
-  fout << a;
-  fout.close();
+	a = 1000001001;
+	b = "-5678";
+	c = a+b;
 
-  cout << "a:" << a << endl;
-  cout << "b:" << b << endl;
-  cout << "c:" << c << endl;
-  cout << "a+b is " << c << "\n";
-  cout << "absolute value is " << abs(c) << "\n";
+	ofstream fout;
+	fout.open ("c++_mpz", ios::out|ios::binary);
+	fout << a;
+	fout << b;
+	fout << c;
+	fout.close();
 
+	cout << "a:" << a << endl;
+	cout << "b:" << b << endl;
+	cout << "c:" << c << endl;
+	cout << "a+b is " << c << "\n";
+	cout << "absolute value is " << abs(c) << "\n";
+
+	ifstream fin;
+	uint32_t size;
+	fin.open("c++_mpz", ios::in|ios::binary);
+	while(fin >> a) {
+		cout << a << endl;
+	}
+	fin.close();
+	
   return 0;
 }
 
