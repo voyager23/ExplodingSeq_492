@@ -24,18 +24,28 @@
 
 #include <iostream>
 #include <fstream>
-#include <gmp.h>
+#include <gmpxx.h>
+
 using namespace std;
 int main(int argc, char **argv)
 {
-	mpz_t a = 1234;
-	mpz_t b = -7766;
-	mpz_t c = 987654321;
-	FILE* myfile;
-	myfile = fopen ("example.txt","wb");
-	mpz_out_raw(myfile, a);
-	myfile.fclose();
+  mpz_class a, b, c;
 
-	return 0;
+  a = 1000001001;
+  b = "-5678";
+  c = a+b;
+    
+  ofstream fout;
+  fout.open ("c++_mpz");
+  fout << a;
+  fout.close();
+
+  cout << "a:" << a << endl;
+  cout << "b:" << b << endl;
+  cout << "c:" << c << endl;
+  cout << "a+b is " << c << "\n";
+  cout << "absolute value is " << abs(c) << "\n";
+
+  return 0;
 }
 
