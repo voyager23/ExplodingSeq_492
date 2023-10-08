@@ -1,5 +1,8 @@
 # makefile for dev folder
 
+via : rw_via_c.cxx
+	g++ rw_via_c.cxx -lgmp -l gmpxx -o ../bin/rw_via
+	
 crw : c_rw_mpz_t.c
 	gcc c_rw_mpz_t.c -lgmp -o ../bin/c_rw_mpz_t
 	
