@@ -1,5 +1,5 @@
 /*
- * mod_chk.cxx
+ * MillerRabin.c
  * 
  * Copyright 2023 mike <mike@fedora38-1.home>
  * 
@@ -20,28 +20,24 @@
  * 
  * 
  */
+ 
+#include "./MillerRabin.hxx"
 
-
-#include <iostream>
-#include <cstdint>
-#include <vector>
-using u64 = uint64_t;
-using u128 = __uint128_t;
 using namespace std;
 
 int main(int argc, char **argv)
 {
-	vector<u64> moduli = {1000000007,1000000009,1000000021,1000000033,
-		1000000087,1000000093,1000000097,1000000103,1000000123,
-		1000000181,1000000207};
-
-	for(u64 &mod : moduli) {
-		u64 a = 1;
-		for(unsigned n = 2; n != 1001; ++n) {
-			a = ((6*a*a) + (10*a) + 3) % mod;
+	const u64 p_hi = 1000000000;	// 10^9
+	const u64 p_lo = 10000000;		// 10^7
+	u64 count = 0;
+	for(u64 n = p_hi+1; n < p_hi+p_lo; n+=2){
+		if (MillerRabin(n)) {
+			cout << n << " is prime." << endl;
+			count += 1;
+			if(count > 10) exit(0);
 		}
-		cout << "a[1000]: mod " << mod << " = " << a << endl;
 	}
+	cout << "Found " << count << " primes between " << p_hi << " and " << p_hi+p_lo << endl;
 	return 0;
 }
 
