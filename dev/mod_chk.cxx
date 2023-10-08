@@ -24,25 +24,19 @@
 
 #include <iostream>
 #include <cstdint>
+using u64 = uint64_t;
+using u128 = __uint128_t;
 using namespace std;
 
 int main(int argc, char **argv)
 {
-	uint64_t a = 1;
-	const uint64_t modulus = 1000000007;
-	unsigned i;
-	cout << a << "  " << a % modulus << endl;
-	for(i = 2; i != 7; ++i) {
-		a = 6*a*a + 10*a + 3;
-		cout << a << "  " << a % modulus << endl;
-	}
-	a = 1;
-	cout << a << "  " << a % modulus << endl;
-	for(i = 2; i != 7; ++i) {
+	u64 a = 1;
+	const u64 modulus = 1000000007;
+	//cout << a << "  " << a % modulus << endl;
+	for(unsigned n = 2; n != 100000001; ++n) {
 		a = ((6*a*a)%modulus + (10*a)%modulus + 3) % modulus;
-		cout << a  << endl;
 	}
-	
+	cout << a  << endl;
 	return 0;
 }
 

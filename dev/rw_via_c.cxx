@@ -56,12 +56,12 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	
-	mpz_t buff;
+	mpz_t buff;	// basic mpz_t
 	mpz_init_set_si(buff,0);
 	FILE *fin  = fopen("c++_mpz", "rb");	
 	if(fin != NULL){
 		mpz_inp_raw(buff,fin);
-		c = mpz_class(buff);
+		c = mpz_class(buff);	// convert mpz_t to mpz_class
 		mpz_inp_raw(buff,fin);
 		a = mpz_class(buff);
 		mpz_inp_raw(buff,fin);
