@@ -31,16 +31,34 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-	vector<u64> moduli = {1000000007,1000000009,1000000021,1000000033,
-		1000000087,1000000093,1000000097,1000000103,1000000123,
-		1000000181,1000000207};
+	//~ vector<u64> moduli = {1000000007,1000000009,1000000021,1000000033,
+		//~ 1000000087,1000000093,1000000097,1000000103,1000000123,
+		//~ 1000000181,1000000207};
+		
+	vector<u64> moduli = {107};
+	vector<u64> results = {};
 
 	for(u64 &mod : moduli) {
 		u64 a = 1;
+		results.push_back(a);
 		for(unsigned n = 2; n != 1001; ++n) {
 			a = ((6*a*a) + (10*a) + 3) % mod;
+			results.push_back(a);
 		}
 		cout << "a[1000]: mod " << mod << " = " << a << endl;
+		for(u64 &r : results)
+			cout << r << endl;
+			
+		// backward search
+		u64 last_item = results.back();
+		size_t cycle = 0;
+		for(auto r = results.rbegin()+1; r != results.rend(); r++){
+			cycle += 1;
+			if (*r == last_item) {
+				cout << "cycle length = " << results.size() - r << endl;
+				break;
+			}
+		} 
 	}
 	return 0;
 }
