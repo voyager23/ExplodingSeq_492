@@ -1,1 +1,7 @@
-/bin
+# Comment
+bin
+obj
+c++_mpz
+mpz_abc
+
+

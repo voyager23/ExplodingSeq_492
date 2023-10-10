@@ -25,9 +25,31 @@
 #include <iostream>
 #include <cstdint>
 #include <vector>
+#include <map>
 using u64 = uint64_t;
 using u128 = __uint128_t;
 using namespace std;
+
+u64 cycle_length(u64 modulus) {
+	map<u64,u64> sequence;
+	sequence.emplace(1,1);	// std::pair<a[index], index>
+	u64 index = 1;
+	u64 a = 1;
+	while(1){
+		a = (6*a*a + 10*a + 3) % modulus;
+		index += 1;
+		auto r = sequence.emplace(a,index); // r is pair<iterator,bool>
+		if(r.second) continue; // emplace succeded
+		// match found
+		// using the result iterator extract a pair<a[a[index], index>
+		// cycle length is difference of indexes	
+		cout << index << " " << std::get<1>((*(std::get<0>(r)))) << " " << endl;
+		return (u64)(index - std::get<1>((*(std::get<0>(r)))));
+		break;
+	}
+	return 0;
+}
+	
 
 int main(int argc, char **argv)
 {
@@ -35,7 +57,9 @@ int main(int argc, char **argv)
 		//~ 1000000087,1000000093,1000000097,1000000103,1000000123,
 		//~ 1000000181,1000000207};
 		
-	vector<u64> moduli = {997};
+
+	const u64 mod = 997;	
+	vector<u64> moduli = {mod};
 	vector<u64> results = {};
 	for(u64 &mod : moduli) {
 		u64 a = 1;
@@ -50,17 +74,10 @@ int main(int argc, char **argv)
 			cout << index << ": " << r << endl;
 			index += 1;
 		}
-		//~ // backward search
-		//~ u64 last_item = results.back();
-		//~ size_t cycle = 0;
-		//~ for(auto r = results.rbegin()+1; r != results.rend(); r++){
-			//~ cycle += 1;
-			//~ if (*r == last_item) {
-				//~ cout << "cycle length = " << results.size() - r << endl;
-				//~ break;
-			//~ }
-		//~ } 
+
 	}
+	u64 c_length = cycle_length(mod);
+	cout << 1000 % c_length << endl;
 	return 0;
 }
 
