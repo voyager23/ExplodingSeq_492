@@ -35,9 +35,8 @@ int main(int argc, char **argv)
 		//~ 1000000087,1000000093,1000000097,1000000103,1000000123,
 		//~ 1000000181,1000000207};
 		
-	vector<u64> moduli = {107};
+	vector<u64> moduli = {997};
 	vector<u64> results = {};
-
 	for(u64 &mod : moduli) {
 		u64 a = 1;
 		results.push_back(a);
@@ -46,19 +45,21 @@ int main(int argc, char **argv)
 			results.push_back(a);
 		}
 		cout << "a[1000]: mod " << mod << " = " << a << endl;
-		for(u64 &r : results)
-			cout << r << endl;
-			
-		// backward search
-		u64 last_item = results.back();
-		size_t cycle = 0;
-		for(auto r = results.rbegin()+1; r != results.rend(); r++){
-			cycle += 1;
-			if (*r == last_item) {
-				cout << "cycle length = " << results.size() - r << endl;
-				break;
-			}
-		} 
+		u64 index = 1;
+		for(u64 &r : results){
+			cout << index << ": " << r << endl;
+			index += 1;
+		}
+		//~ // backward search
+		//~ u64 last_item = results.back();
+		//~ size_t cycle = 0;
+		//~ for(auto r = results.rbegin()+1; r != results.rend(); r++){
+			//~ cycle += 1;
+			//~ if (*r == last_item) {
+				//~ cout << "cycle length = " << results.size() - r << endl;
+				//~ break;
+			//~ }
+		//~ } 
 	}
 	return 0;
 }
