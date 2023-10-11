@@ -34,40 +34,57 @@ using u128 = __uint128_t;
 using namespace std;
 
 vector<u64>prime_modulus(u64 x, u64 y);
+
 vector<u64>prime_modulus(u64 x, u64 y){
-	vector<u64> primes = {0};
-	
+	// approx 25 seconds for x=10^9 and y=10^7 returns 482449 values
+	vector<u64> primes = {};
+	if((x % 2)==0) x += 1; // test odd values
+	for(u64 p = x; p <= x+y; p+=2)
+		if (MillerRabin(p)) primes.push_back(p);	
 	return primes;
 }
+
+// Searches require a list/vector of prime moduli
 
 u64 simple_search(u64 x, u64 y, u64 n);
 u64 simple_search(u64 x, u64 y, u64 n) {
 	vector<u64> primes = prime_modulus(x,y);
-	return 0;
+	cout << "primes has " << primes.size() << " values." << endl;
+	cout << primes.front() << " -> " << primes.back() << endl;
+	u64 B = 0;
+	for(u64 &p : primes) {
+		u64 a = 1;	u64 idx = 1;
+		while(idx < y) {
+			idx += 1;
+			a = (6*a*a + 10*a + 3) % p;
+		} // while...
+		B = (B + a) % p;
+	} // for...
+	return B;
 }
 
 u64 cycle_search(u64 x, u64 y, u64 n);
 u64 cycle_search(u64 x, u64 y, u64 n) {
 	vector<u64> primes = prime_modulus(x,y);
+	cout << "primes has " << primes.size() << " values." << endl;
+	cout << primes.front() << " -> " << primes.back() << endl;
 	return 0;
 }
 
 int main(int argc, char **argv)
 {
-	const u64 x = 1000000000;
-	const u64 y = 1000;
-	const u64 n = 1000;
+	const u64 x = 1000000000; // 10^9
+	//const u64 y = 10000000; // 10^7
+	const u64 y = 1000;  // 10^3
+	const u64 n = 1000;	 // 10^3
 	const u64 lo_prime =  1000000007;
 	const u64 mid_prime = 1000000993; // y = 10^3
 	const u64 hi_prime =  1009999999; // y = 10^7
 	
-	// Searches require a list/vector of prime moduli
-	
 	if(n < (x + y)) {
-		// construct a vector<u64> of primes x <= p <= x+y
-		simple_search(x,y,n);
+		u64 B = simple_search(x,y,n);
+		cout << "Simple search => " << B << endl;
 	} else {
-		// construct a vector<u64> of primes x <= p <= x+y
 		cycle_search(x,y,n);
 	}
 	
