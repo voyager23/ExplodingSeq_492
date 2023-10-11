@@ -1,7 +1,9 @@
 # makefile for dev folder
 
+EXE=../bin/modchk
+
 mod_chk : mod_chk.cxx
-	g++ -std=c++17 -g mod_chk.cxx -o ../bin/modchk 
+	g++ -std=c++17 -g mod_chk.cxx -o $(EXE) 
 
 via : rw_via_c.cxx
 	g++ rw_via_c.cxx -lgmp -l gmpxx -o ../bin/rw_via
@@ -16,5 +18,5 @@ limit : limit.cxx
 	g++ -std=c++17 limit.cxx -o ../bin/limit 
 
 run :
-	../bin/modchk
+	$(EXE)
 	
