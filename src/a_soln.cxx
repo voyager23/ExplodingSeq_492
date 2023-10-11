@@ -49,16 +49,16 @@ vector<u64>prime_modulus(u64 x, u64 y){
 u64 simple_search(u64 x, u64 y, u64 n);
 u64 simple_search(u64 x, u64 y, u64 n) {
 	vector<u64> primes = prime_modulus(x,y);
-	cout << "primes has " << primes.size() << " values." << endl;
+	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
 	u64 B = 0;
 	for(u64 &p : primes) {
 		u64 a = 1;	u64 idx = 1;
-		while(idx < y) {
+		while(idx < n) {
 			idx += 1;
 			a = (6*a*a + 10*a + 3) % p;
 		} // while...
-		B = (B + a) % p;
+		B = (B + a);
 	} // for...
 	return B;
 }
@@ -66,7 +66,7 @@ u64 simple_search(u64 x, u64 y, u64 n) {
 u64 cycle_search(u64 x, u64 y, u64 n);
 u64 cycle_search(u64 x, u64 y, u64 n) {
 	vector<u64> primes = prime_modulus(x,y);
-	cout << "primes has " << primes.size() << " values." << endl;
+	cout << "Cyclic search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
 	return 0;
 }
@@ -80,6 +80,7 @@ int main(int argc, char **argv)
 	const u64 lo_prime =  1000000007;
 	const u64 mid_prime = 1000000993; // y = 10^3
 	const u64 hi_prime =  1009999999; // y = 10^7
+	
 	
 	if(n < (x + y)) {
 		u64 B = simple_search(x,y,n);
