@@ -1,7 +1,10 @@
 # Makefile for source folder
 
-EXE=../bin/asoln
+EXE=../bin/bsoln
 
+bsoln : b_soln.cxx
+	g++ -std=c++17 -O2 b_soln.cxx -o $(EXE)
+	
 asoln : a_soln.cxx
 	g++ -std=c++17 -O2 a_soln.cxx -o $(EXE)
 
@@ -10,4 +13,7 @@ mod_chk : mod_chk.cxx
 
 run :
 	$(EXE)
+	
+db :
+	gdb $(EXE)
 	

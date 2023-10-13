@@ -38,7 +38,7 @@ u64 cycle_length(u64 modulus) {
 	while(1){
 		a = (6*a*a + 10*a + 3) % modulus;
 		index += 1;
-		auto r = se quence.emplace(a,index); // r is pair<iterator,bool>
+		auto r = sequence.emplace(a,index); // r is pair<iterator,bool>
 		if(r.second) continue; // emplace succeded
 		// match found
 		// using the result iterator extract a pair<a[a[index], index>

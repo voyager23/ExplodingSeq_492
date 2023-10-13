@@ -18,44 +18,59 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * 
+ * solution: 242586962923928 15 digits (uint64_t)
  */
 
+//~ Notes: Except for the final sum B, integers can be contained in uint32_t
+//~ which has a max value of 4,294,967,295 > 1,001,000,000.
+//~ The value of a is always odd. This implies that the maximum number of a%p values
+//~ will be 1,001,000,000 / 2, approx 505,000,000 values (worst case). This 
+//~ can be reserved for a vector<uint32_t>. Alternatively use vector.clear() 
+//~ which does not change capacity and allows dynamic resize.
 
 
 #include <iostream>
 #include <cstdint>
 #include <vector>
 #include <map>
+#include <climits>
 #include "../inc/MillerRabin.hxx"
 
 using u64 = uint64_t;
+using u32 = uint32_t;
 using u128 = __uint128_t;
 using namespace std;
 
-vector<u64>prime_modulus(u64 x, u64 y);
-vector<u64>prime_modulus(u64 x, u64 y){
+vector<u32>prime_modulus(u32 x, u32 y);
+vector<u32>prime_modulus(u32 x, u32 y){
 	// approx 25 seconds for x=10^9 and y=10^7 returns 482449 values
-	vector<u64> primes = {};
+	vector<u32> primes = {};
 	if((x % 2)==0) x += 1; // test odd values
-	for(u64 p = x; p <= x+y; p+=2)
-		if (MillerRabin(p)) primes.push_back(p);	
+	for(u32 p = x; p <= x+y; p+=2) {
+		if (MillerRabin(p)) {
+			if(p <= UINT_MAX){
+				primes.push_back(p);
+			} else {
+			cout << "Warning: prime_modulus overflow" << endl;
+			}
+		}
+	}
 	return primes;
 }
 
 // Searches require a list/vector of prime moduli
 
-u64 simple_search(u64 x, u64 y, u64 n);
-u64 cyclic_search(u64 x, u64 y, u64 n);
+u64 simple_search(u32 x, u32 y, u64 n);
+u64 cyclic_search(u32 x, u32 y, u64 n);
 
 // ---------------------------------------------------------------------
-u64 simple_search(u64 x, u64 y, u64 n) {
-	vector<u64> primes = prime_modulus(x,y);
+u64 simple_search(u32 x, u32 y, u64 n) {
+	vector<u32> primes = prime_modulus(x,y);
 	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
 	u64 B = 0;
-	for(u64 &p : primes) {
-		u64 a = 1;	u64 idx = 1;
+	for(u32 &p : primes) {
+		u32 a = 1;	u32 idx = 1;
 		while(idx < n) {
 			idx += 1;
 			a = (6*a*a + 10*a + 3) % p;
@@ -66,71 +81,55 @@ u64 simple_search(u64 x, u64 y, u64 n) {
 }
 
 //----------------------------------------------------------------------
-u64 cyclic_search(u64 x, u64 y, u64 n) {
-	vector<u64> primes = prime_modulus(x,y);
+u64 cyclic_search(u32 x, u32 y, u64 n) {
+	vector<u32> primes = prime_modulus(x,y);
 	cout << "Cyclic search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
-	// B = 0;
-	// For each modulus
-		// Establish the value of a{6}
-		// Continue to record index and value of a{n} until a match is found.
-		// cycle length is difference of indexes.
-		// x mod p gives index of final value
-		// sum to B
+	
 	u64 B = 0;
-	for(u64 &p : primes) {
-		u64 a = 1;	u64 idx = 1;
+	vector<u64> A;
+	A.reserve(x/2);
+	for(u32 &p : primes) {
+		A.clear();
+		A = {0,1,19};
+		u64 a = 19;	size_t idx = 2;
 		while(idx < 6) {
 			idx += 1;
 			a = (6*a*a + 10*a + 3) % p;
+			A.push_back(a);
 		}
-		u64 a6 = a;
+		u64 a6 = a;	// Note value for repeat check
 		do {
 			a = (6*a*a + 10*a + 3) % p;
 			idx += 1;
+			A.push_back(a);
 		}while (a != a6);
-		// debug
-		cout << "idx-6 = " << idx - 6 << endl;
-		// find iterations mod cycle length
-		// this value is index to final value
-		// debug
+		size_t cycle_length = idx - 6;
+		size_t result_idx = n % cycle_length;
+		u64 a_n = A.at(result_idx);
+		cout << a_n << "   cycle: " << cycle_length << endl;
+		B += a_n;
 	}
 		
-	return 0;
+	return B;
 }
 
 //----------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-	const u64 x = 1000000000; // 10^9
-	//const u64 y = 10000000; // 10^7
-	const u64 y = 1000;  // 10^3
-	const u64 n = 1000000000000;	 // 10^15  example 2.
-	
-try {
-   std::vector<uint32_t> foo;
-   foo.reserve(1000000000 + 10000000);
-   foo = {0,1,19};
-   foo.clear();
-   cout << foo.capacity() << endl;
-   foo[foo.capacity()-1] = 999999999;
-}
-catch(...) {
-	cout << "Something failed" << endl;
-	
-}
-	exit(0);
-	
-	//~ const u64 lo_prime =  1000000007;
-	//~ const u64 mid_prime = 1000000993; // y = 10^3
-	//~ const u64 hi_prime =  1009999999; // y = 10^7
+	// Example 2 (10^9, 10^3, 10^15)
+	const u32 x = 1e9; 	// 10^9
+	const u32 y = 1e3;  // 10^3
+	const u64 n = 1e15;	// 10^15
 	
 	
 	if(n < (x + y)) {
 		u64 B = simple_search(x,y,n);
 		cout << "Simple search => " << B << endl;
 	} else {
-		cyclic_search(x,y,n);
+		u64 B = 0;
+		B = cyclic_search(x,y,n);
+		cout << "Cyclic search => " << B << endl;		
 	}
 	
 	return 0;
