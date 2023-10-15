@@ -34,6 +34,7 @@
 #include <vector>
 #include <map>
 #include <climits>
+
 #include "../inc/MillerRabin.hxx"
 
 using u64 = uint64_t;
@@ -82,6 +83,15 @@ u64 simple_search(u32 x, u32 y, u64 n) {
 
 //----------------------------------------------------------------------
 u64 cyclic_search(u32 x, u32 y, u64 n) {
+	
+	uint64_t *ptr = (uint64_t *)malloc(505*1e6*sizeof(uint64_t));
+	if (ptr == NULL){
+		std::cout << "Fail\n";
+		exit(1);
+	} else {
+		std::cout << (((505*1000000) + 128)*sizeof(uint64_t)) << "	Succeded.\n";
+	}
+	
 	vector<u32> primes = prime_modulus(x,y);
 	cout << "Cyclic search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
@@ -107,10 +117,11 @@ u64 cyclic_search(u32 x, u32 y, u64 n) {
 		size_t cycle_length = idx - 6;
 		size_t result_idx = n % cycle_length;
 		u64 a_n = A.at(result_idx);
-		cout << a_n << "   cycle: " << cycle_length << endl;
+		cout << a_n << "\tcycle: " << cycle_length << endl;
 		B += a_n;
 	}
-		
+	
+	free(ptr);
 	return B;
 }
 
