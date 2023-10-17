@@ -45,24 +45,6 @@ const u32 foobar = 1031;
 //======
 
 // Definitions
-u64 simple_search(u32 x, u32 y, u64 n) {
-	//vector<u32> primes = prime_modulus(x,y);
-	vector<u32> primes = {foobar};
-	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
-	cout << primes.front() << " -> " << primes.back() << endl;
-	u64 B = 0;
-	for(u32 &p : primes) {
-		u32 a = 1;	u32 idx = 1;
-		while(idx < n) {
-			idx += 1;
-			a = (6*a*a + 10*a + 3) % p;
-			cout << idx << ": " << a << endl;
-		} // while...
-		cout << "a["<< n << "] mod " << p << " = " << a <<endl;
-		B = (B + a);
-	} // for...
-	return B;
-}
 
 vector<u32>prime_modulus(u32 x, u32 y){
 	// approx 25 seconds for x=10^9 and y=10^7 returns 482449 values
@@ -79,58 +61,67 @@ vector<u32>prime_modulus(u32 x, u32 y){
 	}
 	return primes;
 }
-
-u64 bookmark_search(u32 x, u32 y, u64 n) {
+//----------------------------------------------------------------------
+u64 simple_search(u32 x, u32 y, u64 n) {
 	//vector<u32> primes = prime_modulus(x,y);
-	vector<u32> primes = {foobar};
-	cout << "Bookmark search. Primes has " << primes.size() << " values." << endl;
+	vector<u32> primes = {1087};
+	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
 	u64 B = 0;
-	const u64 slice = 100;
-	vector<u64> bmk = {1};	//a0 = 1;
+	for(u32 &p : primes) {
+		u32 a = 1;	u32 idx = 1;
+		while(idx < n) {
+			idx += 1;
+			a = (6*a*a + 10*a + 3) % p;
+			cout << idx << ": " << a << endl;
+		} // while...
+		cout << "a["<< n << "] mod " << p << " = " << a <<endl<<endl;;
+		B = (B + a);
+	} // for...
+	return B;
+}
+
+//----------------------------------------------------------------------
+u64 bookmark_search(u32 x, u32 y, u64 n) {
+	vector<u32> primes = prime_modulus(x,y);
+	//vector<u32> primes = {157,497};
+	cout << "Bookmark search. Primes has " << primes.size() << " values." << endl;
+	cout << primes.front() << " -> " << primes.back() << endl;
+	
+	u64 B = 0;
 	
 	for(u32 &p : primes) {
-		u32 a = 1; u32 idx = 1;
-		while(idx != 6){
-			++idx;
-			a = (6*a*a + 10*a + 3) % p;
-		}
-		u32 a6 = a;	// nominal cycle base
-		do{
-			a = (6*a*a + 10*a + 3) % p;
-			++idx;
-			if ((idx % slice)==1){
-				bmk[idx / slice] = a;
-			}
-		} while(a != a6);
-		// cycle found
-		size_t cycle_length = idx - 6;       //204
-		size_t result_idx = n % cycle_length;//2000 % 204 = 164
-		// reset a and idx
-		a = bmk[(result_idx / slice) * slice];
-		idx = (result_idx / slice) + 1;
-		while(idx != result_idx){
+		map<u32,u32> cycles = { make_pair(1,1), make_pair(19,2) };
+		u32 a = 19; u32 idx = 2;
+		do {
 			a = (6*a*a + 10*a + 3) % p;
 			idx += 1;
-		}
-		u64 a_n = a;
-		cout << a_n << "\tcycle: " << cycle_length << endl;			
+			auto result = cycles.emplace(make_pair(a,idx));
+			if (result.second == false) {
+				//TODO
+		} while (1);
+			
 	}
 	return B;
 }
+
+//======================================================================
+
 int main(int argc, char **argv)
 {
 	// Bookmark search
 	const u32 x = 1e3; 	// 1000
-	const u32 y = 50;   //   50
+	const u32 y = 1e3;   // 1000
 	const u64 n = 2e3;	// 2000
 	u64 B = 0;
+	
+	
 	B = simple_search(x,y,n);
 	cout << "Simple search => " << B << endl;
+			
+	//~ B = bookmark_search(x,y,n);
+	//~ cout << "Bookmark search => " << B << endl;			
 	
-				
-	B = bookmark_search(x,y,n);
-	cout << "Bookmark search => " << B << endl;			
 	return 0;
 }
 
