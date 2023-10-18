@@ -40,9 +40,8 @@ using namespace std;
 vector<u32>prime_modulus(u32 x, u32 y);
 u64 simple_search(u32 x, u32 y, u64 n);
 
-// DEBUG
+
 const u32 foobar = 1031;
-//======
 
 // Definitions
 
@@ -64,7 +63,7 @@ vector<u32>prime_modulus(u32 x, u32 y){
 //----------------------------------------------------------------------
 u64 simple_search(u32 x, u32 y, u64 n) {
 	//vector<u32> primes = prime_modulus(x,y);
-	vector<u32> primes = {1087};
+	vector<u32> primes = {1091};
 	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
 	u64 B = 0;
@@ -99,8 +98,8 @@ u64 bookmark_search(u32 x, u32 y, u64 n) {
 			auto result = cycles.emplace(make_pair(a,idx));
 			if (result.second == false) {
 				//TODO
-		} while (1);
-			
+			}
+		} while (1);			
 	}
 	return B;
 }
