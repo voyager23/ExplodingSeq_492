@@ -28,6 +28,7 @@
 #include <vector>
 #include <map>
 #include <climits>
+#include <iterator>
 
 #include "../inc/MillerRabin.hxx"
 
@@ -106,7 +107,9 @@ u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
 			// does this entry already exist?
 			for(vector<u32>::iterator j = clength.begin(); j != clength.end()-1; ++j){
 				if(*j == clength.back()){
-					cout << "modulus: " << p << "  cycle_length = " << (clength.end()-1 - j) << endl;
+					u32 stride = distance(j, clength.end()) - 1;
+					cout << "modulus: " << p << "  cycle_length = " << stride << endl;
+					cout << "a["<< n << "] mod " << p << " = " << clength[n%stride] <<endl;					
 					goto LABEL01; // Jump to label
 				} // if...
 			} // for j...
@@ -127,6 +130,8 @@ int main(int argc, char **argv)
 	u64 B = 0;
 	vector<u32> primes;
 	primes = prime_modulus(x,y);
+	// DEBUG ONLY
+	primes = {1091,1093};
 	for(u32 &p : primes){
 	
 		cout << "Simple search"<< endl;	
@@ -134,7 +139,8 @@ int main(int argc, char **argv)
 		cout << "Bookmark search" << endl;				
 		B = bookmark_search(x,y,n,p);
 
-		cout << endl;			
+		cout << endl;
+			
 	}
 	return 0;
 }

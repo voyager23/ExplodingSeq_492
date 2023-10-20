@@ -1,0 +1,39 @@
+
+Simple search
+a[2000] mod 1069 = 724
+Bookmark search
+modulus: 1069  cycle_length = 11
+a[2000] mod 1069 = 887
+
+Simple search
+a[2000] mod 1087 = 476
+Bookmark search
+modulus: 1087  cycle_length = 4
+a[2000] mod 1087 = 1
+
+
+Simple search
+a[2000] mod 1069 = 724
+Bookmark search
+modulus: 1069  cycle_length = 11
+a[2000] mod 1069 = 887
+
+Simple search
+a[2000] mod 1087 = 476
+Bookmark search
+modulus: 1087  cycle_length = 4
+a[2000] mod 1087 = 1
+
+Simple search
+a[2000] mod 1091 = 19
+Bookmark search
+modulus: 1091  cycle_length = 18
+a[2000] mod 1091 = 177
+
+Simple search
+a[2000] mod 1093 = 207
+Bookmark search
+modulus: 1093  cycle_length = 12
+a[2000] mod 1093 = 126
+
+
