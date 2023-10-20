@@ -1,6 +1,9 @@
 # makefile for dev folder
 
-EXE=../bin/modchk
+EXE=../bin/iter
+
+iter : iterator.cxx
+	g++ -std=c++17 -g iterator.cxx -o $(EXE) 
 
 mod_chk : mod_chk.cxx
 	g++ -std=c++17 -g mod_chk.cxx -o $(EXE) 
