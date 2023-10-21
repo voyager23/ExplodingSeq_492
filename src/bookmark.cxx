@@ -94,27 +94,34 @@ u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
 	//cout << primes.front() << " -> " << primes.back() << endl;
 	
 	u64 B = 0;
+	vector<u32>::iterator j;
+	
 	for(u32 &p : primes) {
 		// setup the cycle length search
-		vector<u32> clength = {1,19}; // Preload search vector
-		u32 idx = 2;
+		vector<u32> aseq = {1,19}; // Preload search vector
 		u32 a = 19;
 		// calc and save next value of 'a'
 		while(1){
 			a = (6*a*a + 10*a + 3) % p;
-			idx += 1;
-			clength.push_back(a);
-			// does this entry already exist?
-			for(vector<u32>::iterator j = clength.begin(); j != clength.end()-1; ++j){
-				if(*j == clength.back()){
-					u32 stride = distance(j, clength.end()) - 1;
-					cout << "modulus: " << p << "  cycle_length = " << stride << endl;
-					cout << "a["<< n << "] mod " << p << " = " << clength[n%stride] <<endl;					
-					goto LABEL01; // Jump to label
-				} // if...
-			} // for j...
+			aseq.push_back(a);
+			// a = *(prev(aseq.end(),1));	// last value pushed
+			for(j = aseq.begin(); j != aseq.end(); ++j){
+				if(*j == *(prev(aseq.end(),1))) break;
+			}
+			size_t d2 = distance(j, prev(aseq.end(),1));
+			if(d2 == 0) {
+				// cout << "No matching value found." << endl;;
+				;
+			} else {
+				cout << "a:" << a <<"	distance: " << d2 << endl;
+				size_t d1 = distance(aseq.begin(),j);
+				size_t offset = ((2000 - d1) % d2) - 1; // offset correction
+				u32 an = *(next(j,offset));				
+				cout << "offset = " << offset << " a[n] = " << an << endl;
+				goto NEXT_MODULUS;
+			}
 		} // while(1)...
-	LABEL01: ;
+	NEXT_MODULUS: ;
 	} // next prime modulus
 	return B;
 }
@@ -124,18 +131,17 @@ u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
 int main(int argc, char **argv)
 {
 	// Bookmark search
-	const u32 x = 1e3;	// 1000
-	const u32 y = 1e3;  // 1000
-	const u64 n = 2e3;	// 2000
+	const u32 x = 1e9;	//
+	const u32 y = 1e3;  // 
+	const u64 n = 1e15;	// 
 	u64 B = 0;
 	vector<u32> primes;
+	cout << "Calc. vector of primes." << endl;
 	primes = prime_modulus(x,y);
-	// DEBUG ONLY
-	primes = {1091,1093};
 	for(u32 &p : primes){
 	
-		cout << "Simple search"<< endl;	
-		B = simple_search(x,y,n,p);
+		//cout << "Simple search"<< endl;	
+		//B = simple_search(x,y,n,p);
 		cout << "Bookmark search" << endl;				
 		B = bookmark_search(x,y,n,p);
 
