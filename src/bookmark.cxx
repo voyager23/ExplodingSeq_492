@@ -26,7 +26,7 @@
 #include <iostream>
 #include <cstdint>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <climits>
 #include <iterator>
 
@@ -41,6 +41,7 @@ using namespace std;
 vector<u32>prime_modulus(u32 x, u32 y);
 u64 simple_search(u32 x, u32 y, u64 n, u32 modulus = 0);
 u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus = 0);
+u64 map_search(u32 x, u32 y, u64 n, u32 modulus = 0);
 
 // Definitions
 vector<u32>prime_modulus(u32 x, u32 y){
@@ -126,14 +127,61 @@ u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
 	return B;
 }
 
+
+
+
+
+u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
+	vector<u32> primes;
+	if(modulus == 0) {
+		primes = prime_modulus(x,y);
+	} else {
+		primes = {modulus};
+	}
+	//cout << "Bookmark search. Primes has " << primes.size() << " values." << endl;
+	//cout << primes.front() << " -> " << primes.back() << endl;
+	
+	u64 B = 0;
+	unordered_map<u32,u64> amap; // key->a[n]  value->idx
+	unordered_map<u32,u64>::iterator j;
+	pair<unordered_map<u32,u64>::iterator, bool> result;
+	
+	for(u32 &p : primes) {
+		// Preload search map
+		amap.clear();
+		amap.emplace(1,1);
+		amap.emplace(19,2);
+		u32 a = 19; size_t idx = 2;
+		// calc and save next value of 'a'
+		while(1){
+			a = 6*a*a + 10*a + 3;
+			++idx;
+			result = amap.emplace(a,idx);
+			if (get<bool>(result) == true) continue;
+			// assume a match has been found
+			// do stuff...
+			
+			cout << "Match" << endl;
+			goto NEXT_MODULUS;			
+		} // while(1)...
+		NEXT_MODULUS: ;
+	} // next prime modulus
+	return B;
+}
+
+
+
+
+
+
 //======================================================================
 
 int main(int argc, char **argv)
 {
 	// Bookmark search
-	const u32 x = 1e9;	//
+	const u32 x = 1e4;	//
 	const u32 y = 1e3;  // 
-	const u64 n = 1e15;	// 
+	const u64 n = 2e3;	// 
 	u64 B = 0;
 	vector<u32> primes;
 	cout << "Calc. vector of primes." << endl;
@@ -142,8 +190,10 @@ int main(int argc, char **argv)
 	
 		//cout << "Simple search"<< endl;	
 		//B = simple_search(x,y,n,p);
-		cout << "Bookmark search" << endl;				
-		B = bookmark_search(x,y,n,p);
+		//cout << "Bookmark search" << endl;				
+		//B = bookmark_search(x,y,n,p);
+		cout << "Map_search" << endl;				
+		B = map_search(x,y,n,p);
 
 		cout << endl;
 			

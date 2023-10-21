@@ -1,4 +1,10 @@
 
+	u64 B = 0;
+	vector<u32>::iterator j;
+	map<pair<u32,u64>> amap;
+	map<pair<u32,u64>>::iterator j;
+	pair<map<pair<u32,u64>>::iterator, bool> result;
+	
 Simple search
 a[2000] mod 1069 = 724
 Bookmark search

@@ -1,0 +1,134 @@
+[mike@fedora38-1 src]$ make run
+../bin/bmk
+Calc. vector of primes.
+Simple search
+a[1000] mod 1000000007 = 524328488
+Bookmark search
+a:926348079	distance: 6796
+offset = 945 a[n] = 636706296
+
+Simple search
+a[1000] mod 1000000009 = 439060637
+Bookmark search
+a:46074107	distance: 33707
+offset = 9800 a[n] = 879099625
+
+Simple search
+a[1000] mod 1000000021 = 355280532
+Bookmark search
+a:88136331	distance: 45734
+offset = 30211 a[n] = 533758143
+
+Simple search
+a[1000] mod 1000000033 = 177761002
+Bookmark search
+a:48891403	distance: 20640
+offset = 18593 a[n] = 207306464
+
+Simple search
+a[1000] mod 1000000087 = 795082289
+Bookmark search
+a:708511621	distance: 14725
+offset = 7321 a[n] = 159260731
+
+Simple search
+a[1000] mod 1000000093 = 828704646
+Bookmark search
+a:810768214	distance: 3873
+offset = 1769 a[n] = 23427275
+
+Simple search
+a[1000] mod 1000000097 = 371816699
+Bookmark search
+a:212331431	distance: 12425
+offset = 4834 a[n] = 519839307
+
+Simple search
+a[1000] mod 1000000103 = 386027603
+Bookmark search
+a:66827301	distance: 5304
+offset = 5058 a[n] = 946098935
+
+Simple search
+a[1000] mod 1000000123 = 429041735
+Bookmark search
+a:612944912	distance: 18089
+offset = 9044 a[n] = 832890219
+
+Simple search
+a[1000] mod 1000000181 = 652944687
+Bookmark search
+a:601501066	distance: 4121
+offset = 3321 a[n] = 147071635
+
+Simple search
+a[1000] mod 1000000207 = 239612683
+Bookmark search
+a:160050651	distance: 3446
+offset = 1703 a[n] = 402747312
+
+Simple search
+a[1000] mod 1000000223 = 918037115
+Bookmark search
+a:961548764	distance: 4010
+offset = 1828 a[n] = 541435186
+
+Simple search
+a[1000] mod 1000000241 = 962540368
+Bookmark search
+a:840086099	distance: 1738
+offset = 1073 a[n] = 762972404
+
+Simple search
+a[1000] mod 1000000271 = 419960133
+Bookmark search
+a:163144415	distance: 13502
+offset = 5110 a[n] = 454822483
+
+Simple search
+a[1000] mod 1000000289 = 271174015
+Bookmark search
+a:122576587	distance: 6513
+offset = 3450 a[n] = 537687271
+
+Simple search
+a[1000] mod 1000000297 = 426697919
+Bookmark search
+a:824657237	distance: 23309
+offset = 572 a[n] = 811801856
+
+Simple search
+a[1000] mod 1000000321 = 104188419
+Bookmark search
+a:351802628	distance: 70172
+offset = 49929 a[n] = 516639887
+
+Simple search
+a[1000] mod 1000000349 = 72876738
+Bookmark search
+a:722386490	distance: 9660
+offset = 1610 a[n] = 614459362
+
+Simple search
+a[1000] mod 1000000363 = 826830636
+Bookmark search
+a:461468897	distance: 83630
+offset = 72083 a[n] = 465918607
+
+Simple search
+a[1000] mod 1000000403 = 168855090
+Bookmark search
+a:198169012	distance: 9428
+offset = 3877 a[n] = 674668474
+
+Simple search
+a[1000] mod 1000000409 = 335933332
+Bookmark search
+a:714550342	distance: 45315
+offset = 10997 a[n] = 165212549
+
+Simple search
+a[1000] mod 1000000411 = 786071509
+Bookmark search
+
+
