@@ -130,7 +130,7 @@ u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
 
 
 
-
+//----------------------------------------------------------------------
 u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 	vector<u32> primes;
 	if(modulus == 0) {
@@ -142,33 +142,44 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 	//cout << primes.front() << " -> " << primes.back() << endl;
 	
 	u64 B = 0;
+	vector<u32> aseq;	// used to recover final value of a based on index
 	unordered_map<u32,u64> amap; // key->a[n]  value->idx
 	unordered_map<u32,u64>::iterator j;
 	pair<unordered_map<u32,u64>::iterator, bool> result;
 	
 	for(u32 &p : primes) {
+		// Preload vector of a values
+		aseq.clear();
+		aseq = {0,1,19};
 		// Preload search map
 		amap.clear();
 		amap.emplace(1,1);
 		amap.emplace(19,2);
+		// extablish working variables
 		u32 a = 19; size_t idx = 2;
-		// calc and save next value of 'a'
+		// iterate values of 'a'
 		while(1){
 			a = 6*a*a + 10*a + 3;
 			++idx;
+			aseq.push_back(a);
 			result = amap.emplace(a,idx);
 			if (get<bool>(result) == true) continue;
 			// assume a match has been found
-			// do stuff...
-			
 			cout << "Match" << endl;
+			j = get<0>(result);	// get the blocking iterator
+			// find order, offset and final value from aseq
+			size_t order = idx - get<size_t>(*j);
+			size_t offset = (n - get<size_t(*j) + 1) % order;
+			u32 an = aseq[get<size_t>(*j) + offset];
+			cout "an = " << an << endl;
+			B += an;
 			goto NEXT_MODULUS;			
 		} // while(1)...
 		NEXT_MODULUS: ;
 	} // next prime modulus
 	return B;
 }
-
+//----------------------------------------------------------------------
 
 
 
