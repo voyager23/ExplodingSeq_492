@@ -127,11 +127,8 @@ u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
 	return B;
 }
 
-
-
-
-//----------------------------------------------------------------------
 u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
+	typedef unordered_map<u32,u64> umap;
 	vector<u32> primes;
 	if(modulus == 0) {
 		primes = prime_modulus(x,y);
@@ -143,9 +140,9 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 	
 	u64 B = 0;
 	vector<u32> aseq;	// used to recover final value of a based on index
-	unordered_map<u32,u64> amap; // key->a[n]  value->idx
-	unordered_map<u32,u64>::iterator j;
-	pair<unordered_map<u32,u64>::iterator, bool> result;
+	umap amap; // key->a[n]  value->idx
+	umap::iterator j;
+	pair<umap::iterator, bool> result;
 	
 	for(u32 &p : primes) {
 		// Preload vector of a values
@@ -161,17 +158,19 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 		while(1){
 			a = 6*a*a + 10*a + 3;
 			++idx;
-			aseq.push_back(a);
+
 			result = amap.emplace(a,idx);
-			if (get<bool>(result) == true) continue;
+			if (get<bool>(result) == true) {
+				aseq.push_back(a);
+				continue;
+			}
 			// assume a match has been found
 			cout << "Match" << endl;
-			j = get<0>(result);	// get the blocking iterator
-			// find order, offset and final value from aseq
-			size_t order = idx - get<size_t>(*j);
-			size_t offset = (n - get<size_t(*j) + 1) % order;
-			u32 an = aseq[get<size_t>(*j) + offset];
-			cout "an = " << an << endl;
+			size_t jidx = get<1>( *(get<0>(result)));
+			size_t order = idx - jidx;
+			size_t offset = (n - jidx + 1) % order;
+			u32 an = aseq[jidx + offset];
+			cout << "a["<< n << "] mod " << p << " = " << a <<endl;
 			B += an;
 			goto NEXT_MODULUS;			
 		} // while(1)...
@@ -179,11 +178,6 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 	} // next prime modulus
 	return B;
 }
-//----------------------------------------------------------------------
-
-
-
-
 
 //======================================================================
 
@@ -199,8 +193,8 @@ int main(int argc, char **argv)
 	primes = prime_modulus(x,y);
 	for(u32 &p : primes){
 	
-		//cout << "Simple search"<< endl;	
-		//B = simple_search(x,y,n,p);
+		cout << "Simple search"<< endl;	
+		B = simple_search(x,y,n,p);
 		//cout << "Bookmark search" << endl;				
 		//B = bookmark_search(x,y,n,p);
 		cout << "Map_search" << endl;				
