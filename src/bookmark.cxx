@@ -183,9 +183,9 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 int main(int argc, char **argv)
 {
 	// Bookmark search
-	const u32 x = 1e4;	//
+	const u32 x = 1e5;	//
 	const u32 y = 1e3;  // 
-	const u64 n = 2e3;	// 
+	const u64 n = 1e4;	// 
 	u64 B = 0;
 	vector<u32> primes;
 	cout << "Calc. vector of primes." << endl;
