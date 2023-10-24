@@ -156,21 +156,20 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 		u32 a = 19; size_t idx = 2;
 		// iterate values of 'a'
 		while(1){
-			a = 6*a*a + 10*a + 3;
+			a = (6*a*a + 10*a + 3) % p;
 			++idx;
-
 			result = amap.emplace(a,idx);
 			if (get<bool>(result) == true) {
 				aseq.push_back(a);
 				continue;
 			}
-			// assume a match has been found
-			cout << "Match" << endl;
+			// match has been found
+			//cout << "Match" << endl;
 			size_t jidx = get<1>( *(get<0>(result)));
 			size_t order = idx - jidx;
 			size_t offset = (n - jidx + 1) % order;
-			u32 an = aseq[jidx + offset];
-			cout << "a["<< n << "] mod " << p << " = " << a <<endl;
+			u32 an = aseq[jidx + offset - 1];
+			cout << "a["<< n << "] mod " << p << " = " << an <<endl;
 			B += an;
 			goto NEXT_MODULUS;			
 		} // while(1)...
@@ -195,13 +194,14 @@ int main(int argc, char **argv)
 	
 		cout << "Simple search"<< endl;	
 		B = simple_search(x,y,n,p);
+		
 		//cout << "Bookmark search" << endl;				
 		//B = bookmark_search(x,y,n,p);
+		
 		cout << "Map_search" << endl;				
 		B = map_search(x,y,n,p);
-
+		
 		cout << endl;
-			
 	}
 	return 0;
 }
