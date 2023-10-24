@@ -3,7 +3,7 @@
 EXE=../bin/bmk
 
 bmk : bookmark.cxx
-	g++ -std=c++17 -g bookmark.cxx -o $(EXE)
+	g++ -std=c++17 -O2 bookmark.cxx -o $(EXE)
 	
 bsoln : b_soln.cxx
 	g++ -std=c++17 -O2 b_soln.cxx -o $(EXE)

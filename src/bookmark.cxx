@@ -183,26 +183,27 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 int main(int argc, char **argv)
 {
 	// Bookmark search
-	const u32 x = 1e5;	//
+	const u32 x = 1e9;	//
 	const u32 y = 1e3;  // 
-	const u64 n = 1e4;	// 
+	const u64 n = 1e3;	// 
 	u64 B = 0;
 	vector<u32> primes;
 	cout << "Calc. vector of primes." << endl;
 	primes = prime_modulus(x,y);
 	for(u32 &p : primes){
 	
-		cout << "Simple search"<< endl;	
-		B = simple_search(x,y,n,p);
+		//~ cout << "Simple search"<< endl;	
+		//~ B = simple_search(x,y,n,p);
 		
-		//cout << "Bookmark search" << endl;				
-		//B = bookmark_search(x,y,n,p);
+		//~ cout << "Bookmark search" << endl;				
+		//~ B = bookmark_search(x,y,n,p);
 		
-		cout << "Map_search" << endl;				
-		B = map_search(x,y,n,p);
-		
-		cout << endl;
+		cout << "Map_search" << endl;
+		B += map_search(x,y,n,p);
 	}
+	
+	cout << "B() = " << B << endl;
+	
 	return 0;
 }
 
