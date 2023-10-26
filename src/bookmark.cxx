@@ -38,17 +38,17 @@ using u128 = __uint128_t;
 using namespace std;
 
 // Declarations
-vector<u32>prime_modulus(u32 x, u32 y);
-u64 simple_search(u32 x, u32 y, u64 n, u32 modulus = 0);
-u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus = 0);
-u64 map_search(u32 x, u32 y, u64 n, u32 modulus = 0);
+vector<u64>prime_modulus(u64 x, u64 y);
+u64 simple_search(u64 x, u64 y, u64 n, u64 modulus = 0);
+u64 bookmark_search(u64 x, u64 y, u64 n, u64 modulus = 0);
+u64 map_search(u64 x, u64 y, u64 n, u64 modulus = 0);
 
 // Definitions
-vector<u32>prime_modulus(u32 x, u32 y){
+vector<u64>prime_modulus(u64 x, u64 y){
 	// approx 25 seconds for x=10^9 and y=10^7 returns 482449 values
-	vector<u32> primes = {};
+	vector<u64> primes = {};
 	if((x % 2)==0) x += 1; // test odd values
-	for(u32 p = x; p <= x+y; p+=2) {
+	for(u64 p = x; p <= x+y; p+=2) {
 		if (MillerRabin(p)) {
 			if(p <= UINT_MAX){
 				primes.push_back(p);
@@ -60,18 +60,19 @@ vector<u32>prime_modulus(u32 x, u32 y){
 	return primes;
 }
 //----------------------------------------------------------------------
-u64 simple_search(u32 x, u32 y, u64 n, u32 modulus) {
-	vector<u32> primes;
+u64 simple_search(u64 x, u64 y, u64 n, u64 modulus) {
+	vector<u64> primes;
 	if(modulus == 0) {
 		primes = prime_modulus(x,y);
 	} else {
 		primes = {modulus};
 	}
-	//cout << "Simple search. Primes has " << primes.size() << " values." << endl;
-	//cout << primes.front() << " -> " << primes.back() << endl;
+	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
+	cout << primes.front() << " -> " << primes.back() << endl;
+	
 	u64 B = 0;
-	for(u32 &p : primes) {
-		u32 a = 1;	u32 idx = 1;
+	for(u64 &p : primes) {
+		u64 a = 1;	u64 idx = 1;
 		while(idx < n) {
 			idx += 1;
 			a = (6*a*a + 10*a + 3) % p;
@@ -84,8 +85,8 @@ u64 simple_search(u32 x, u32 y, u64 n, u32 modulus) {
 }
 
 //----------------------------------------------------------------------
-u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
-	vector<u32> primes;
+u64 bookmark_search(u64 x, u64 y, u64 n, u64 modulus) {
+	vector<u64> primes;
 	if(modulus == 0) {
 		primes = prime_modulus(x,y);
 	} else {
@@ -95,12 +96,12 @@ u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
 	//cout << primes.front() << " -> " << primes.back() << endl;
 	
 	u64 B = 0;
-	vector<u32>::iterator j;
+	vector<u64>::iterator j;
 	
-	for(u32 &p : primes) {
+	for(u64 &p : primes) {
 		// setup the cycle length search
-		vector<u32> aseq = {1,19}; // Preload search vector
-		u32 a = 19;
+		vector<u64> aseq = {1,19}; // Preload search vector
+		u64 a = 19;
 		// calc and save next value of 'a'
 		while(1){
 			a = (6*a*a + 10*a + 3) % p;
@@ -117,7 +118,7 @@ u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
 				cout << "a:" << a <<"	distance: " << d2 << endl;
 				size_t d1 = distance(aseq.begin(),j);
 				size_t offset = ((2000 - d1) % d2) - 1; // offset correction
-				u32 an = *(next(j,offset));				
+				u64 an = *(next(j,offset));				
 				cout << "offset = " << offset << " a[n] = " << an << endl;
 				goto NEXT_MODULUS;
 			}
@@ -127,9 +128,9 @@ u64 bookmark_search(u32 x, u32 y, u64 n, u32 modulus) {
 	return B;
 }
 
-u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
-	typedef unordered_map<u32,u64> umap;
-	vector<u32> primes;
+u64 map_search(u64 x, u64 y, u64 n, u64 modulus) {
+	typedef unordered_map<u64,u64> umap;
+	vector<u64> primes;
 	if(modulus == 0) {
 		primes = prime_modulus(x,y);
 	} else {
@@ -139,12 +140,12 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 	//cout << primes.front() << " -> " << primes.back() << endl;
 	
 	u64 B = 0;
-	vector<u32> aseq;	// used to recover final value of a based on index
+	vector<u64> aseq;	// used to recover final value of a based on index
 	umap amap; // key->a[n]  value->idx
 	umap::iterator j;
 	pair<umap::iterator, bool> result;
 	
-	for(u32 &p : primes) {
+	for(u64 &p : primes) {
 		// Preload vector of a values
 		aseq.clear();
 		aseq = {0,1,19};
@@ -153,7 +154,7 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 		amap.emplace(1,1);
 		amap.emplace(19,2);
 		// extablish working variables
-		u32 a = 19; size_t idx = 2;
+		u64 a = 19; size_t idx = 2;
 		// iterate values of 'a'
 		while(1){
 			a = (6*a*a + 10*a + 3) % p;
@@ -168,7 +169,7 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 			size_t jidx = get<1>( *(get<0>(result)));
 			size_t order = idx - jidx;
 			size_t offset = (n - jidx + 1) % order;
-			u32 an = aseq[jidx + offset - 1];
+			u64 an = aseq[jidx + offset - 1];
 			cout << "a["<< n << "] mod " << p << " = " << an <<endl;
 			B += an;
 			goto NEXT_MODULUS;			
@@ -183,24 +184,19 @@ u64 map_search(u32 x, u32 y, u64 n, u32 modulus) {
 int main(int argc, char **argv)
 {
 	// Bookmark search
-	const u32 x = 1e9;	//
-	const u32 y = 1e3;  // 
+	const u64 x = 1e9;	//
+	const u64 y = 1e3;  // 
 	const u64 n = 1e3;	// 
 	u64 B = 0;
-	vector<u32> primes;
-	cout << "Calc. vector of primes." << endl;
-	primes = prime_modulus(x,y);
-	for(u32 &p : primes){
 	
-		//~ cout << "Simple search"<< endl;	
-		//~ B = simple_search(x,y,n,p);
+		cout << "Simple search"<< endl;	
+		B = simple_search(x,y,n);
 		
 		//~ cout << "Bookmark search" << endl;				
 		//~ B = bookmark_search(x,y,n,p);
 		
-		cout << "Map_search" << endl;
-		B += map_search(x,y,n,p);
-	}
+		//~ cout << "Map_search" << endl;
+		//~ B += map_search(x,y,n,p);
 	
 	cout << "B() = " << B << endl;
 	

@@ -2,6 +2,9 @@
 
 EXE=../bin/iter
 
+csm : checkSimpleMap.cxx
+	g++ -std=c++17 -g checkSimpleMap.cxx -o ../bin/csm
+	
 iter : iterator.cxx
 	g++ -std=c++17 -g iterator.cxx -o $(EXE) 
 

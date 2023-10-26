@@ -37,10 +37,10 @@ int main(int argc, char **argv)
 		1000000531,1000000579,1000000607,1000000613,1000000637,1000000663,1000000711,1000000753,1000000787,1000000801,
 		1000000829,1000000861,1000000871,1000000891,1000000901,1000000919,1000000931,1000000933,1000000993,1000001011};
 		
-		for(uint32_t t = 1000000007; t <= 1000001011; t += 2) {
-			bool r = MillerRabin(t);
-			if((primes.find(t) != primes.end()) and (not r))
-				cout << "missed value " << t << endl;
+		// For a known prime, if MR reports false this is a missed prime.
+		for(auto i = primes.begin(); i != primes.end(); ++i) {
+			bool r = MillerRabin(*i);
+			if(r == false) cout << "Missed " << *i << endl;
 		}
 	return 0;
 }
