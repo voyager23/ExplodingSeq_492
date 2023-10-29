@@ -136,15 +136,16 @@ u64 map_search(u64 x, u64 y, u64 n, u64 modulus) {
 	} else {
 		primes = {modulus};
 	}
-	//cout << "Bookmark search. Primes has " << primes.size() << " values." << endl;
-	//cout << primes.front() << " -> " << primes.back() << endl;
-	
+	cout << "Map_search. Primes has " << primes.size() << " values." << endl;
+	cout << primes.front() << " -> " << primes.back() << endl;
+	// exit(0);	//DEBUG
 	u64 B = 0;
 	vector<u64> aseq;	// used to recover final value of a based on index
 	umap amap; // key->a[n]  value->idx
 	umap::iterator j;
 	pair<umap::iterator, bool> result;
 	
+	u64 count = 0;
 	for(u64 &p : primes) {
 		// Preload vector of a values
 		aseq.clear();
@@ -170,8 +171,11 @@ u64 map_search(u64 x, u64 y, u64 n, u64 modulus) {
 			size_t order = idx - jidx;
 			size_t offset = (n - jidx + 1) % order;
 			u64 an = aseq[jidx + offset - 1];
-			cout << "a["<< n << "] mod " << p << " = " << an <<endl;
+			cout << "a["<< n << "] mod " << p << " = " << an << "\torder: " << order << endl;
 			B += an;
+			
+			if(++count > 20) exit(0);
+			
 			goto NEXT_MODULUS;			
 		} // while(1)...
 		NEXT_MODULUS: ;
@@ -185,18 +189,18 @@ int main(int argc, char **argv)
 {
 	// Bookmark search
 	const u64 x = 1e9;	//
-	const u64 y = 1e3;  // 
+	const u64 y = 1e4;  // 
 	const u64 n = 1e3;	// 
 	u64 B = 0;
+	//cout << "Simple search"<< endl;	
+	//B = simple_search(x,y,n);
 	
-		cout << "Simple search"<< endl;	
-		B = simple_search(x,y,n);
-		
-		//~ cout << "Bookmark search" << endl;				
-		//~ B = bookmark_search(x,y,n,p);
-		
-		//~ cout << "Map_search" << endl;
-		//~ B += map_search(x,y,n,p);
+	//~ cout << "Bookmark search" << endl;				
+	//~ B = bookmark_search(x,y,n,p);
+	
+	B = 0;
+	cout << "Map_search" << endl;
+	B += map_search(x,y,1e15);
 	
 	cout << "B() = " << B << endl;
 	
