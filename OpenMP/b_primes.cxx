@@ -46,10 +46,45 @@ vector<u64>prime_modulus(u64 x, u64 y){
 	return primes;
 }
 
+//----------------------------------------------------------------------
+
+u64 simple_search(u64 x, u64 y, u64 n, u64 modulus = 11987) {
+	vector<u64> primes;
+	if(modulus == 0) {
+		primes = prime_modulus(x,y);
+	} else {
+		primes = {modulus};
+	}
+	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
+	cout << primes.front() << " -> " << primes.back() << endl;
+	
+	u64 B = 0;
+	for(u64 &p : primes) {
+		u64 a = 1;	u64 idx = 1;
+		while(idx < n) {
+			idx += 1;
+			a = (6*a*a + 10*a + 3) % p;
+			//cout << idx << ": " << a << endl;
+		} // while...
+		cout << "a["<< n << "] mod " << p << " = " << a <<endl;
+		B = (B + a);
+	} // for...
+	return B;
+}
+
+//----------------------------------------------------------------------
+
 int main(int argc, char **argv)
 {
 	const u32 n = 100000;
-	vector<u64> primes = prime_modulus(1e4, 2e3);
+	const u64 x = 1e4;
+	const u64 y = 2e3;
+	vector<u64> primes = prime_modulus(x, y);
+	
+	// Debug single value
+	primes.clear();
+	primes.push_back(10657);
+	
 	cout << "vector size: " << primes.size() << endl;
 	u64 Sum = 0;
 	for(auto &p : primes) Sum += p;
@@ -100,7 +135,12 @@ int main(int argc, char **argv)
 		NEXT_MODULUS: ;		   
 		} // for
 	} // pragma
-	cout << "B = " << B << endl;
+	cout << "#pragma B = " << B << endl;
+	
+	// Do simple search here with matching values for x,y and n
+	
+	cout << simple_search(x,y,n) << endl;
+	
 	return 0;
 }
 
