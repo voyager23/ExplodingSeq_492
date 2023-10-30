@@ -29,6 +29,10 @@
 #include <utility>
 #include "../inc/MillerRabin.hxx"
 
+	// From modulus 1087 cycle length = 4
+	//vector<u32> data = {1,19,185,673,285,1053,77,467,34,757,77,467}; // p = 1087
+	//vector<u32> data = {1,19,177,1004,907,555,94,500,514,732,544,547,577,271,413,916,897,224,1,19,177,1004}; // p = 1091
+
 using u64 = uint64_t;
 using u32 = uint32_t;
 using namespace std;
@@ -83,12 +87,9 @@ int main(int argc, char **argv)
 	
 	// Debug single value
 	primes.clear();
-	primes.push_back(10657);
+	primes.push_back(1091);
 	
 	cout << "vector size: " << primes.size() << endl;
-	u64 Sum = 0;
-	for(auto &p : primes) Sum += p;
-	cout << "Sum of vector: " << Sum << endl;
 	
 	//compute sum 
 	u64 B = 0;
@@ -103,9 +104,11 @@ int main(int argc, char **argv)
 		//the array is distributed statically between threads
 		#pragma omp for schedule(static) 
 			for (auto &p : primes) {
+				cout << "#pragma modulus:" << p << endl;
 				// setup the cycle length search
 				amap.clear();
-				imap.clear();		
+				imap.clear();
+				// Note: These maps assume '1' based indexing		
 				amap.emplace(1,1);  // a_n -> idx
 				imap.emplace(1,1);	// idx -> a_n
 				amap.emplace(2,19);
@@ -118,28 +121,32 @@ int main(int argc, char **argv)
 					a_n = (u32)((t1 + t2 + 3) % p);
 					++idx;
 					result = amap.emplace(a_n, idx);
+					
+					//~ auto foo = (result.first)->first;
+					//~ auto bar = (result.first)->second;
+					
 					if (result.second == true) {
 						imap.emplace(idx, a_n);	// idx is unique (sequential)
 						continue;
 					} else { // matching value of a_n found.
-						// recover the index
-						k = result.first; //iterator to previous mapped pair < a_n, index >					
+						// Note: '1' based index in use
+						// recover the previous index into k
+						k = result.first; //iterator to previously mapped pair < a_n, index >					
 						u32 order = idx - (k->second);
-						u32 offset = (n - (k->second) + 1) % order;
+						u32 offset = (n - (k->second)) % order;
 						a_n = imap[offset + k->second];
 						#pragma omp critial
 						B += a_n;
 						goto NEXT_MODULUS;
-					}
-				}
+					} //if...
+				} //while(1)
 		NEXT_MODULUS: ;		   
-		} // for
+		} // for(auto &p...
 	} // pragma
 	cout << "#pragma B = " << B << endl;
-	
 	// Do simple search here with matching values for x,y and n
 	
-	cout << simple_search(x,y,n) << endl;
+	cout << "\n=====Simple search=====\n" << simple_search(x,y,n,1091) << endl;
 	
 	return 0;
 }
