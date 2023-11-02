@@ -1,7 +1,13 @@
-# Comment
-bin
-obj
-c++_mpz
-mpz_abc
+OpenMP/bp
+OpenMP/cp
+OpenMP/dp
+OpenMP/ex1
+OpenMP/ex2
+OpenMP/ex3
+OpenMP/ex4
+OpenMP/px1
 
-
+bThreads.cxx
+dev/a.out
+dev/cMR
+dev/cSM
