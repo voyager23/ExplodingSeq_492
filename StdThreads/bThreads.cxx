@@ -11,15 +11,6 @@ using u64 = uint64_t;
 using u32 = uint32_t;
 using u128 = __uint128_t;
 
-// Thread data block
-	typedef struct {
-	size_t index;
-	uint64_t x,y,n,result;
-} TDB;	 
-
-// Global
-static const int num_threads = 10;
-
 //----------------------------------------------------------------------
 vector<u64>prime_modulus(u64 x, u64 y){
 	// approx 25 seconds for x=10^9 and y=10^7 returns 482449 values
@@ -94,32 +85,86 @@ u64 map_search(u64 x, u64 y, u64 n, u64 modulus) {
 }
 //----------------------------------------------------------------------
 
-void a_func_thread() {
+// Global
+static const int num_threads = 4;
+
+// Thread data block
+	typedef struct {
+	size_t index;
+	uint64_t x,y,n,result;
+	uint64_t modulus;
+	std::vector<uint64_t>::iterator iter;	
+} TDB;	 
+//----------------------------------------------------------------------
+
+void a_func_thread(TDB *tdp) {
 	//This function called from thread
-	 std::cout << " id: " << tdp->id << std::endl;
+	//std::cout << " id: " << tdp->index << std::endl;
+	tdp->result = tdp->index * 100 + 1;
+}
+
+void thread_map_search(TDB *tdp) {
+	// Calculate the value of a{n} for a range of moduli.
+	// Sum each value to result variable.
+	// if modulus == 0 consult the primes vector
+	//	else
+	//		single pass using provided modulus
+	// TDB has the first iterator value
+	tdp->result = 0;
+	// construct a local primes vector
+	std::vector<uint64_t> primes;
+	if (tdp->modulus == 0) {
+		while(1){
+			try
+			{
+				primes.push_back(*(tdp->iter));
+				tdp->iter += num_threads;
+			}
+			catch (std::out_of_range const& exc)
+			{
+				break;
+			}
+		}
+	} else {
+		primes = {tdp->modulus};
+	}
+
+	
 }
 
 //======================================================================
 int main(int argc, char **argv) {
+	
+	// From modulus 1087 cycle length = 4
+	//vector<u32> data = {1,19,185,673,285,1053,77,467,34,757,77,467}; // p = 1087
+	//vector<u32> data = {1,19,177,1004,907,555,94,500,514,732,544,547,577,271,413,916,897,224,1,19,177,1004}; // p = 1091
+	
 	std::vector<uint64_t> primes = {2,3,5,7,11,13,17,19,23,29,31,37}; // 12 values
 	std::vector<std::thread> vth;
 	std::array<TDB, num_threads> atdb;
 
-
 	 //Launch a group of threads
-	 th.clear();
-	 tdata.clear()
+	 vth.clear();
+	 
 	 for (uint64_t i = 0; i < num_threads; ++i) {
-		 // setup thread data block
-		 
-		 // setup thread
-		 vth.push_back(std::thread(a_func_thread, i));
+		 // setup a thread data block
+		 TDB *p = atdb.data() + i;
+		 p->index = i; p->n = 1e5; p->result = 0; p->x = 1e3; p->y = 1e2;
+		 p->modulus = 1087;
+		 p->iter = primes.begin() + i;
+		 // setup a thread
+		 vth.push_back(std::thread(a_func_thread, p));
 	 }
 
-	 std::cout << "Launched from the main\n";
+	 // std::cout << "Launched from the main\n";
 
 	 //Join the threads with the main thread
-	 for( auto i = th.begin(); i != th.end(); i++) i->join();
+	 for( auto i = vth.begin(); i != vth.end(); i++) i->join();
+	 
+	 // Scan/print the TDB array
+	 for(auto i = 0; i < num_threads; ++i){
+		 cout << atdb[i].index << " " << atdb[i].result << endl;
+	 }
 
 	 return 0;
  }
