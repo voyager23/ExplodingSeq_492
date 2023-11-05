@@ -93,25 +93,54 @@ std::vector<uint64_t> primes;
 
 // Thread data block
 	typedef struct {
-	size_t idx;
+	size_t id;
 	uint64_t n,result;
-	uint64_t modulus;
-	std::vector<uint64_t>&foo = primes;
-} TDB;
+	std::vector<uint64_t>&v_prime = primes;
+} tdb;
  
 //----------------------------------------------------------------------
 
-//~ void a_func_thread(TDB *tdp) {
-	//~ //This function called from thread
-	//~ //std::cout << " id: " << tdp->index << std::endl;
-	//~ tdp->result = tdp->index * 100 + 1;
-//~ }
-
-void thread_map_search(TDB *tdp) {
+void thread_map_search(tdb *tdp) {
 	// Calculate the value of a{n} for a range of moduli.
 	// Sum each value to result variable.
-	// TDB has the first iterator value
-	tdp->result = 0;	
+	// map values of 'a' to their respective idx
+	std::unordered_map<uint64_t, uint64_t> amapi;
+	// vector of sequential values of 'a' to enable recovery of the first index instance 
+	std::vector<uint64_t> a_seq;
+	pair<std::unordered_map<uint64_t, uint64_t>::iterator, bool> result;	// emplace return value
+	
+	tdp->result = 0;
+	for(size_t p = tdp->id; p < primes.size(); p += num_threads) {
+		// Preload reverse map {imapa}
+		a_seq.clear();
+		a_seq = {0,1,19};
+		// Preload search map {amapi}
+		amapi.clear();
+		amapi.emplace(0,0); 
+		amapi.emplace(1,1); 
+		amapi.emplace(19,2);
+		// extablish working variables
+		uint64_t a = 19;  uint64_t idx = 2;
+		// iterate values of 'a'
+		while(1){
+			a = (6*a*a + 10*a + 3) % p;
+			++idx;
+			result = amapi.emplace(a,idx);
+			if (get<bool>(result) == true) {
+				a_seq.push_back(a);
+				continue;
+			} else { //found match for 'a'
+				size_t jidx = get<1>( *(get<0>(result)));
+				size_t order = idx - jidx;
+				size_t offset = (tdp->n - jidx + 1) % order;
+				u64 an = a_seq[jidx + offset - 1];
+				//cout << "a["<< n << "] mod " << p << " = " << an << "\torder: " << order << endl;
+				tdp->result += an;
+				goto NEXT_MODULUS;
+			}		
+		} // while(1)...
+	NEXT_MODULUS: ;
+	}	 
 }
 
 //======================================================================
@@ -121,32 +150,31 @@ int main(int argc, char **argv) {
 	//vector<u32> data = {1,19,185,673,285,1053,77,467,34,757,77,467}; // p = 1087
 	//vector<u32> data = {1,19,177,1004,907,555,94,500,514,732,544,547,577,271,413,916,897,224,1,19,177,1004}; // p = 1091
 	
+	const uint64_t x = 1000;
+	const uint64_t y =  200;
 
-	primes = prime_modulus(1000,2000); // 12 values
+	primes = prime_modulus(x,y);
 	std::vector<std::thread> vth;
-	std::array<TDB, num_threads> atdb;
+	std::array<tdb, num_threads> atdb;
 
-	 //Launch a group of threads
-	 vth.clear();
-	 
-	 for (uint64_t i = 0; i < num_threads; ++i) {
-
+	 //Launch a team of threads
+	 for (size_t i = 0; i < num_threads; ++i) {
 		 // setup a thread data block
-		 TDB *p = atdb.data() + i;
-		 p->idx = i; p->n = 1e5; p->result = 0;
+		 tdb *p = atdb.data() + i;
+		 p->id = i; p->n = 1e5; p->result = 0;
+		 
 		 // setup a thread
-
-		 vth.push_back(std::thread(thread_map_search, p));
+		 //vth.push_back(std::thread(thread_map_search, p));
 	 }
-
+	exit(0);
 	 // std::cout << "Launched from the main\n";
 
 	 //Join the threads with the main thread
-	 for( auto i = vth.begin(); i != vth.end(); i++) i->join();
+	 //for( auto i = vth.begin(); i != vth.end(); i++) i->join();
 	 
-	 // Scan/print the TDB array
+	 // Scan/print the tdb array
 	 for(auto i = 0; i < num_threads; ++i){
-		 cout << atdb[i].idx << " " << atdb[i].result << endl;
+		 cout << atdb[i].id << " " << atdb[i].result << endl;
 	 }
 
 	 return 0;
