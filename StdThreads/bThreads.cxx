@@ -88,7 +88,9 @@ u64 map_search(u64 x, u64 y, u64 n, u64 modulus) {
 // Global
 
 static const int num_threads = 4;
+
 std::vector<uint64_t> primes;
+
 // Thread data block
 	typedef struct {
 	size_t idx;
@@ -120,7 +122,7 @@ int main(int argc, char **argv) {
 	//vector<u32> data = {1,19,177,1004,907,555,94,500,514,732,544,547,577,271,413,916,897,224,1,19,177,1004}; // p = 1091
 	
 
-	primes = {2,3,5,7,11,13,17,19,23,29,31,37}; // 12 values
+	primes = prime_modulus(1000,2000); // 12 values
 	std::vector<std::thread> vth;
 	std::array<TDB, num_threads> atdb;
 
@@ -132,7 +134,6 @@ int main(int argc, char **argv) {
 		 // setup a thread data block
 		 TDB *p = atdb.data() + i;
 		 p->idx = i; p->n = 1e5; p->result = 0;
-		 p->vprime = primes;
 		 // setup a thread
 
 		 vth.push_back(std::thread(thread_map_search, p));
@@ -145,7 +146,7 @@ int main(int argc, char **argv) {
 	 
 	 // Scan/print the TDB array
 	 for(auto i = 0; i < num_threads; ++i){
-		 cout << atdb[i].index << " " << atdb[i].result << endl;
+		 cout << atdb[i].idx << " " << atdb[i].result << endl;
 	 }
 
 	 return 0;
