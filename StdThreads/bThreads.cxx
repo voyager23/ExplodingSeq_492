@@ -88,13 +88,13 @@ u64 map_search(u64 x, u64 y, u64 n, u64 modulus) {
 // Global
 
 static const int num_threads = 4;
-
+std::vector<uint64_t> primes;
 // Thread data block
 	typedef struct {
 	size_t idx;
 	uint64_t n,result;
 	uint64_t modulus;
-	std::vector<uint64_t>& vprime;
+	std::vector<uint64_t>&foo = primes;
 } TDB;
  
 //----------------------------------------------------------------------
@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
 	//vector<u32> data = {1,19,177,1004,907,555,94,500,514,732,544,547,577,271,413,916,897,224,1,19,177,1004}; // p = 1091
 	
 
-	std::vector<uint64_t> primes = {2,3,5,7,11,13,17,19,23,29,31,37}; // 12 values
+	primes = {2,3,5,7,11,13,17,19,23,29,31,37}; // 12 values
 	std::vector<std::thread> vth;
 	std::array<TDB, num_threads> atdb;
 
