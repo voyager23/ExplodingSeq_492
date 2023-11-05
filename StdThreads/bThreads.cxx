@@ -93,7 +93,8 @@ static const int num_threads = 4;
 	size_t index;
 	uint64_t x,y,n,result;
 	uint64_t modulus;
-	std::vector<uint64_t>::iterator iter;	
+	std::vector<uint64_t>::iterator iter;
+	std::vector<uint64_t>& foo;
 } TDB;	 
 //----------------------------------------------------------------------
 
@@ -112,12 +113,11 @@ void thread_map_search(TDB *tdp) {
 	// TDB has the first iterator value
 	tdp->result = 0;
 	// construct a local primes vector
-	std::vector<uint64_t> primes;
 	if (tdp->modulus == 0) {
 		while(1){
 			try
 			{
-				primes.push_back(*(tdp->iter));
+				tdp->primes.push_back(*(tdp->iter));
 				tdp->iter += num_threads;
 			}
 			catch (std::out_of_range const& exc)
@@ -126,7 +126,7 @@ void thread_map_search(TDB *tdp) {
 			}
 		}
 	} else {
-		primes = {tdp->modulus};
+		tdp->primes = {tdp->modulus};
 	}
 
 	
@@ -152,6 +152,7 @@ int main(int argc, char **argv) {
 		 p->index = i; p->n = 1e5; p->result = 0; p->x = 1e3; p->y = 1e2;
 		 p->modulus = 1087;
 		 p->iter = primes.begin() + i;
+		 p->foo = primes;
 		 // setup a thread
 		 vth.push_back(std::thread(a_func_thread, p));
 	 }
