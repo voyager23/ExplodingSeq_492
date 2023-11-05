@@ -89,49 +89,27 @@ u64 map_search(u64 x, u64 y, u64 n, u64 modulus) {
 
 static const int num_threads = 4;
 
-
 // Thread data block
 	typedef struct {
-	size_t index;
-	uint64_t x,y,n,result;
+	size_t idx;
+	uint64_t n,result;
 	uint64_t modulus;
-	std::vector<uint64_t>::iterator iter;
-	std::vector<uint64_t>& foo;
-} TDB;	 
+	std::vector<uint64_t>& vprime;
+} TDB;
+ 
 //----------------------------------------------------------------------
 
-void a_func_thread(TDB *tdp) {
-	//This function called from thread
-	//std::cout << " id: " << tdp->index << std::endl;
-	tdp->result = tdp->index * 100 + 1;
-}
+//~ void a_func_thread(TDB *tdp) {
+	//~ //This function called from thread
+	//~ //std::cout << " id: " << tdp->index << std::endl;
+	//~ tdp->result = tdp->index * 100 + 1;
+//~ }
 
 void thread_map_search(TDB *tdp) {
 	// Calculate the value of a{n} for a range of moduli.
 	// Sum each value to result variable.
-	// if modulus == 0 consult the primes vector
-	//	else
-	//		single pass using provided modulus
 	// TDB has the first iterator value
-	tdp->result = 0;
-	// construct a local primes vector
-	if (tdp->modulus == 0) {
-		while(1){
-			try
-			{
-				tdp->primes.push_back(*(tdp->iter));
-				tdp->iter += num_threads;
-			}
-			catch (std::out_of_range const& exc)
-			{
-				break;
-			}
-		}
-	} else {
-		tdp->primes = {tdp->modulus};
-	}
-
-	
+	tdp->result = 0;	
 }
 
 //======================================================================
@@ -153,13 +131,11 @@ int main(int argc, char **argv) {
 
 		 // setup a thread data block
 		 TDB *p = atdb.data() + i;
-		 p->index = i; p->n = 1e5; p->result = 0; p->x = 1e3; p->y = 1e2;
-		 p->modulus = 1087;
-		 p->iter = primes.begin() + i;
-		 p->foo = primes;
+		 p->idx = i; p->n = 1e5; p->result = 0;
+		 p->vprime = primes;
 		 // setup a thread
 
-		 vth.push_back(std::thread(a_func_thread, p));
+		 vth.push_back(std::thread(thread_map_search, p));
 	 }
 
 	 // std::cout << "Launched from the main\n";
