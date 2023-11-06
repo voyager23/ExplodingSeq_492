@@ -11,8 +11,22 @@ using u64 = uint64_t;
 using u32 = uint32_t;
 using u128 = __uint128_t;
 
-//----------------------------------------------------------------------
-vector<u64>prime_modulus(u64 x, u64 y){
+// Globals
+static const int num_threads = 10;
+std::vector<uint64_t> primes;	// Referenced in Thread data block
+// Thread data block
+typedef struct {
+	size_t id;
+	uint64_t n,result;
+	std::vector<uint64_t>&v_prime = primes;
+}tdb;
+// Declarations
+vector<u64> prime_modulus(u64 x, u64 y);
+u64 map_search(u64 x, u64 y, u64 n, u64 modulus);
+void thread_map_search(tdb *tdp);
+
+// Definitions
+vector<u64> prime_modulus(u64 x, u64 y){
 	// approx 25 seconds for x=10^9 and y=10^7 returns 482449 values
 	std::vector<u64> primes = {};
 	if((x % 2)==0) x += 1; // test odd values
@@ -27,77 +41,6 @@ vector<u64>prime_modulus(u64 x, u64 y){
 	}
 	return primes;
 }
-
-//----------------------------------------------------------------------
-u64 map_search(u64 x, u64 y, u64 n, u64 modulus) {
-	typedef std::unordered_map<u64,u64> umap;
-	std::vector<u64> primes;
-	if(modulus == 0) {
-		primes = prime_modulus(x,y);
-	} else {
-		primes = {modulus};
-	}
-	cout << "Map_search. Primes has " << primes.size() << " values." << endl;
-	cout << primes.front() << " -> " << primes.back() << endl;
-	// exit(0);	//DEBUG
-	u64 B = 0;
-	std::vector<u64> aseq;	// used to recover final value of a based on index
-	umap amap; // key->a[n]  value->idx
-	umap::iterator j;
-	pair<umap::iterator, bool> result;
-	
-	u64 count = 0;
-	for(u64 &p : primes) {
-		// Preload vector of a values
-		aseq.clear();
-		aseq = {0,1,19};
-		// Preload search map
-		amap.clear();
-		amap.emplace(1,1);
-		amap.emplace(19,2);
-		// extablish working variables
-		u64 a = 19; size_t idx = 2;
-		// iterate values of 'a'
-		while(1){
-			a = (6*a*a + 10*a + 3) % p;
-			++idx;
-			result = amap.emplace(a,idx);
-			if (get<bool>(result) == true) {
-				aseq.push_back(a);
-				continue;
-			}
-			// match has been found
-			//cout << "Match" << endl;
-			size_t jidx = get<1>( *(get<0>(result)));
-			size_t order = idx - jidx;
-			size_t offset = (n - jidx + 1) % order;
-			u64 an = aseq[jidx + offset - 1];
-			cout << "a["<< n << "] mod " << p << " = " << an << "\torder: " << order << endl;
-			B += an;
-			
-			if(++count > 20) exit(0);
-			
-			goto NEXT_MODULUS;			
-		} // while(1)...
-		NEXT_MODULUS: ;
-	} // next prime modulus
-	return B;
-}
-//----------------------------------------------------------------------
-
-// Global
-
-static const int num_threads = 1;
-
-std::vector<uint64_t> primes;
-
-// Thread data block
-	typedef struct {
-	size_t id;
-	uint64_t n,result;
-	std::vector<uint64_t>&v_prime = primes;
-} tdb;
- 
 //----------------------------------------------------------------------
 
 void thread_map_search(tdb *tdp) {
@@ -110,7 +53,7 @@ void thread_map_search(tdb *tdp) {
 	pair<std::unordered_map<uint64_t, uint64_t>::iterator, bool> result;	// emplace return value
 	
 	tdp->result = 0;
-	for(size_t p = tdp->id; p < primes.size(); p += num_threads) {
+	for(size_t p = tdp->id; p < tdp->v_prime.size(); p += num_threads) {
 		// Preload reverse map {imapa}
 		a_seq.clear();
 		a_seq = {0,1,19};
@@ -123,7 +66,7 @@ void thread_map_search(tdb *tdp) {
 		uint64_t a = 19;  uint64_t idx = 2;
 		// iterate values of 'a'
 		while(1){
-			a = (6*a*a + 10*a + 3) % p;
+			a = (6*a*a + 10*a + 3) % tdp->v_prime[p];
 			++idx;
 			result = amapi.emplace(a,idx);
 			if (get<bool>(result) == true) {
@@ -134,9 +77,9 @@ void thread_map_search(tdb *tdp) {
 				size_t order = idx - jidx;
 				size_t offset = (tdp->n - jidx + 1) % order;
 				u64 an = a_seq[jidx + offset - 1];
-				//cout << "a["<< n << "] mod " << p << " = " << an << "\torder: " << order << endl;
+				//cout << "a["<< n << "] mod " << v_prime[p] << " = " << an << "\torder: " << order << endl;
 				tdp->result += an;
-				goto NEXT_MODULUS;
+				goto NEXT_MODULUS;	// Jump to next prime modulus
 			}		
 		} // while(1)...
 	NEXT_MODULUS: ;
@@ -151,12 +94,9 @@ int main(int argc, char **argv) {
 	//vector<u32> data = {1,19,177,1004,907,555,94,500,514,732,544,547,577,271,413,916,897,224,1,19,177,1004}; // p = 1091
 	
 	const uint64_t x = 1000;
-	const uint64_t y =  200;
+	const uint64_t y =  200; // This gives 29 primes
 
 	primes = prime_modulus(x,y);
-	// DEBUG
-	primes = {10007}; // CHECK N_THREADS IS 1
-	// END DEBUG
 	std::vector<std::thread> vth;
 	std::array<tdb, num_threads> atdb;
 
@@ -168,16 +108,20 @@ int main(int argc, char **argv) {
 		 
 		 // setup a thread
 		 vth.push_back(std::thread(thread_map_search, p));
+		 //thread_map_search(p);
 	 }
 	 //std::cout << "Launched from the main\n";
 
 	 //Join the threads with the main thread
-	 for( auto i = vth.begin(); i != vth.end(); i++) i->join();
+	for( auto i = vth.begin(); i != vth.end(); i++) i->join();
 	 
 	 // Scan/print the tdb array
+	 uint SUM = 0;
 	 for(auto i = 0; i < num_threads; ++i){
 		 cout << atdb[i].id << " " << atdb[i].result << endl;
+		 SUM += atdb[i].result;
 	 }
+	 cout << "Final sum: " << SUM << endl;
 
 	 return 0;
  }
