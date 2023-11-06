@@ -154,6 +154,9 @@ int main(int argc, char **argv) {
 	const uint64_t y =  200;
 
 	primes = prime_modulus(x,y);
+	// DEBUG
+	primes = {10007};
+	// END DEBUG
 	std::vector<std::thread> vth;
 	std::array<tdb, num_threads> atdb;
 
@@ -164,13 +167,12 @@ int main(int argc, char **argv) {
 		 p->id = i; p->n = 1e5; p->result = 0;
 		 
 		 // setup a thread
-		 //vth.push_back(std::thread(thread_map_search, p));
+		 vth.push_back(std::thread(thread_map_search, p));
 	 }
-	exit(0);
-	 // std::cout << "Launched from the main\n";
+	 //std::cout << "Launched from the main\n";
 
 	 //Join the threads with the main thread
-	 //for( auto i = vth.begin(); i != vth.end(); i++) i->join();
+	 for( auto i = vth.begin(); i != vth.end(); i++) i->join();
 	 
 	 // Scan/print the tdb array
 	 for(auto i = 0; i < num_threads; ++i){
