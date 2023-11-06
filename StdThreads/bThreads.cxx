@@ -24,6 +24,7 @@ typedef struct {
 vector<u64> prime_modulus(u64 x, u64 y);
 u64 map_search(u64 x, u64 y, u64 n, u64 modulus);
 void thread_map_search(tdb *tdp);
+u64 simple_search(u64 x, u64 y, u64 n);
 
 // Definitions
 vector<u64> prime_modulus(u64 x, u64 y){
@@ -85,6 +86,23 @@ void thread_map_search(tdb *tdp) {
 	NEXT_MODULUS: ;
 	}	 
 }
+// ---------------------------------------------------------------------
+
+u64 simple_search(u64 x, u64 y, u64 n) {
+	vector<u64> primes = prime_modulus(x,y);
+	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
+	cout << primes.front() << " -> " << primes.back() << endl;
+	u64 B = 0;
+	for(u64 &p : primes) {
+		u64 a = 1;	u64 idx = 1;
+		while(idx < n) {
+			idx += 1;
+			a = (6*a*a + 10*a + 3) % p;
+		} // while...
+		B = (B + a);
+	} // for...
+	return B;
+}
 
 //======================================================================
 int main(int argc, char **argv) {
@@ -122,6 +140,8 @@ int main(int argc, char **argv) {
 		 SUM += atdb[i].result;
 	 }
 	 cout << "Final sum: " << SUM << endl;
+	 
+	 cout << simple_search(x,y,100000) << endl;
 
 	 return 0;
  }
