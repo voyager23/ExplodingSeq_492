@@ -87,7 +87,7 @@ u64 map_search(u64 x, u64 y, u64 n, u64 modulus) {
 
 // Global
 
-static const int num_threads = 4;
+static const int num_threads = 1;
 
 std::vector<uint64_t> primes;
 
@@ -155,7 +155,7 @@ int main(int argc, char **argv) {
 
 	primes = prime_modulus(x,y);
 	// DEBUG
-	primes = {10007};
+	primes = {10007}; // CHECK N_THREADS IS 1
 	// END DEBUG
 	std::vector<std::thread> vth;
 	std::array<tdb, num_threads> atdb;
