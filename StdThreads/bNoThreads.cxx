@@ -57,7 +57,7 @@ void thread_map_search(tdb *tdp) {
 	for(size_t p = tdp->id; p < tdp->v_prime.size(); p += num_threads) {
 		// Preload reverse map {imapa}
 		a_seq.clear();
-		a_seq = {1,19};
+		a_seq = {0,1,19};
 		// Preload search map {amapi}
 		amapi.clear(); 
 		amapi.emplace(1,1); 
@@ -82,8 +82,11 @@ void thread_map_search(tdb *tdp) {
 				offset %= order;
 				offset -= 1;
 				if(offset < 0) offset += order;
+				cout << head+offset << endl;
+				for(auto i = a_seq.begin(); i != a_seq.end(); ++i) cout << *i << " ";
+				cout << endl;
 				u64 an = a_seq[head + offset];
-				cout << "\na[no_limit] mod " << tdp->v_prime[p] << " = " << an << "\torder: " << order << endl;
+				cout << "a[100000] mod " << tdp->v_prime[p] << " = " << an << "\torder: " << order << endl;
 				tdp->result += an;
 				goto NEXT_MODULUS;	// Jump to next prime modulus
 			}		
@@ -96,16 +99,17 @@ void thread_map_search(tdb *tdp) {
 u64 simple_search(u64 x, u64 y, u64 n) {
 	vector<u64> primes = prime_modulus(x,y);
 	
-	primes = {1061}; // DEBUG VALUE ONLY
-	
+	primes ={1021};
+			
 	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
+
 	u64 B = 0;
 	for(u64 &p : primes) {
 		u64 a = 1;	u64 idx = 1;
-		while(idx <= n) {
-			a = (6*a*a + 10*a + 3) % p;
+		while(idx < n) {
 			idx += 1;
+			a = (6*a*a + 10*a + 3) % p;
 		} // while...
 		cout << "simple search a[100000] = " << a << " % " << p << endl;
 		B = (B + a);
@@ -121,9 +125,7 @@ int main(int argc, char **argv) {
 	const uint64_t y =  200; // This gives 29 primes
 
 	primes = prime_modulus(x,y);
-	
-	primes = {1061};	// a[n] = 
-	
+	primes = {1021};
 	std::vector<std::thread> vth;
 	std::array<tdb, num_threads> atdb;
 
