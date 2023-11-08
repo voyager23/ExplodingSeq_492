@@ -57,13 +57,12 @@ void thread_map_search(tdb *tdp) {
 	for(size_t p = tdp->id; p < tdp->v_prime.size(); p += num_threads) {
 		// Preload reverse map {imapa}
 		a_seq.clear();
-		a_seq = {0,1,19};
+		a_seq = {1,19};
 		// Preload search map {amapi}
-		amapi.clear();
-		amapi.emplace(0,0); 
+		amapi.clear(); 
 		amapi.emplace(1,1); 
 		amapi.emplace(19,2);
-		cout << 0 << endl << 1 << endl << 19 << endl;
+		cout << 1 << endl << 19 << endl;
 		// extablish working variables
 		uint64_t a = 19;  uint64_t idx = 2;
 		// iterate values of 'a'
@@ -77,10 +76,13 @@ void thread_map_search(tdb *tdp) {
 				continue;
 			} else { //found match for 'a'
 				cout << a << endl;
-				size_t jidx = get<1>( *(get<0>(result)));
-				size_t order = idx - jidx - 1;
-				size_t offset = (tdp->n - jidx + 1) % order;
-				u64 an = a_seq[jidx + offset - 1];
+				size_t head = get<1>( *(get<0>(result)));
+				size_t order = idx - head;
+				int64_t offset = (tdp->n - (head - 1)); // allow for negative offset values
+				offset %= order;
+				offset -= 1;
+				if(offset < 0) offset += order;
+				u64 an = a_seq[head + offset];
 				cout << "\na[no_limit] mod " << tdp->v_prime[p] << " = " << an << "\torder: " << order << endl;
 				tdp->result += an;
 				goto NEXT_MODULUS;	// Jump to next prime modulus
@@ -93,17 +95,19 @@ void thread_map_search(tdb *tdp) {
 
 u64 simple_search(u64 x, u64 y, u64 n) {
 	vector<u64> primes = prime_modulus(x,y);
-	primes = {1021};
+	
+	primes = {1061}; // DEBUG VALUE ONLY
+	
 	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
 	u64 B = 0;
 	for(u64 &p : primes) {
 		u64 a = 1;	u64 idx = 1;
-		while(idx < n) {
-			idx += 1;
+		while(idx <= n) {
 			a = (6*a*a + 10*a + 3) % p;
+			idx += 1;
 		} // while...
-		cout << "simple search a[n] = " << a << " % " << p << endl;
+		cout << "simple search a[100000] = " << a << " % " << p << endl;
 		B = (B + a);
 	} // for...
 	return B;
@@ -118,7 +122,7 @@ int main(int argc, char **argv) {
 
 	primes = prime_modulus(x,y);
 	
-	primes = {1021};	// a[n] = 
+	primes = {1061};	// a[n] = 
 	
 	std::vector<std::thread> vth;
 	std::array<tdb, num_threads> atdb;
