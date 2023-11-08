@@ -1,15 +1,15 @@
 # makefile for dev folder
 
-EXE=../bin/iter
+EXE=../bin/modchk
 
+mod_chk : mod_chk.cxx
+	g++ -std=c++17 -g mod_chk.cxx -o $(EXE)
+	 
 csm : checkSimpleMap.cxx
 	g++ -std=c++17 -g checkSimpleMap.cxx -o ../bin/csm
 	
 iter : iterator.cxx
 	g++ -std=c++17 -g iterator.cxx -o $(EXE) 
-
-mod_chk : mod_chk.cxx
-	g++ -std=c++17 -g mod_chk.cxx -o $(EXE) 
 
 via : rw_via_c.cxx
 	g++ rw_via_c.cxx -lgmp -l gmpxx -o ../bin/rw_via

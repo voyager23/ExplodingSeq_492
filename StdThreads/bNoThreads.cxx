@@ -63,6 +63,7 @@ void thread_map_search(tdb *tdp) {
 		amapi.emplace(0,0); 
 		amapi.emplace(1,1); 
 		amapi.emplace(19,2);
+		cout << 0 << endl << 1 << endl << 19 << endl;
 		// extablish working variables
 		uint64_t a = 19;  uint64_t idx = 2;
 		// iterate values of 'a'
@@ -72,13 +73,15 @@ void thread_map_search(tdb *tdp) {
 			result = amapi.emplace(a,idx);
 			if (get<bool>(result) == true) {
 				a_seq.push_back(a);
+				cout << a << endl;
 				continue;
 			} else { //found match for 'a'
+				cout << a << endl;
 				size_t jidx = get<1>( *(get<0>(result)));
-				size_t order = idx - jidx;
+				size_t order = idx - jidx - 1;
 				size_t offset = (tdp->n - jidx + 1) % order;
 				u64 an = a_seq[jidx + offset - 1];
-				//cout << "a["<< n << "] mod " << v_prime[p] << " = " << an << "\torder: " << order << endl;
+				cout << "\na[no_limit] mod " << tdp->v_prime[p] << " = " << an << "\torder: " << order << endl;
 				tdp->result += an;
 				goto NEXT_MODULUS;	// Jump to next prime modulus
 			}		
@@ -90,7 +93,7 @@ void thread_map_search(tdb *tdp) {
 
 u64 simple_search(u64 x, u64 y, u64 n) {
 	vector<u64> primes = prime_modulus(x,y);
-	primes = {11987};
+	primes = {1021};
 	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
 	u64 B = 0;
@@ -100,6 +103,7 @@ u64 simple_search(u64 x, u64 y, u64 n) {
 			idx += 1;
 			a = (6*a*a + 10*a + 3) % p;
 		} // while...
+		cout << "simple search a[n] = " << a << " % " << p << endl;
 		B = (B + a);
 	} // for...
 	return B;
@@ -114,7 +118,7 @@ int main(int argc, char **argv) {
 
 	primes = prime_modulus(x,y);
 	
-	primes = {11987};	// a[n] = 
+	primes = {1021};	// a[n] = 
 	
 	std::vector<std::thread> vth;
 	std::array<tdb, num_threads> atdb;
@@ -137,10 +141,10 @@ int main(int argc, char **argv) {
 	 // Scan/print the tdb array
 	 uint SUM = 0;
 	 for(auto i = 0; i < num_threads; ++i){
-		 cout << atdb[i].id << " " << atdb[i].result << endl;
+		 //cout << atdb[i].id << " " << atdb[i].result << endl;
 		 SUM += atdb[i].result;
 	 }
-	 cout << "Final sum: " << SUM << endl;
+	 cout << "Final sum: " << SUM << endl << endl;
 	 
 	 cout << simple_search(x,y,100000) << endl;
 

@@ -1,0 +1,59 @@
+
+Modulus 1021
+This returns an incorrect value of 1 using thread_map_search(tdb *tdp)
+The accepted answer is 678 for a[100000]
+
+g++ -std=c++17 -g mod_chk.cxx -o ../bin/modchk
+../bin/modchk
+1: 1
+2: 19
+3: 317
+4: 654
+5: 940
+6: 782
+7: 346
+8: 933
+9: 663
+10: 678
+11: 19
+12: 317
+13: 654
+14: 940
+15: 782
+16: 346
+17: 933
+18: 663
+19: 678
+20: 19
+21: 317
+22: 654
+23: 940
+24: 782
+25: 346
+26: 933
+27: 663
+28: 678
+29: 19
+30: 317
+
+g++ -std=c++17 bNoThreads.cxx -g -o ./bnt
+0
+1
+19
+317
+654
+940
+782
+346
+933
+663
+678
+19
+
+a[no_limit] mod 1021 = 933	order: 8
+Final sum: 933
+
+Simple search. Primes has 1 values.
+1021 -> 1021
+simple search a[n] = 678 % 1021
+678

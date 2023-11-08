@@ -12,7 +12,7 @@ using u32 = uint32_t;
 using u128 = __uint128_t;
 
 // Globals
-static const int num_threads = 10;
+static const int num_threads = 29;
 std::vector<uint64_t> primes;	// Referenced in Thread data block
 // Thread data block
 typedef struct {
@@ -136,7 +136,7 @@ int main(int argc, char **argv) {
 	 // Scan/print the tdb array
 	 uint SUM = 0;
 	 for(auto i = 0; i < num_threads; ++i){
-		 cout << atdb[i].id << " " << atdb[i].result << endl;
+		 cout << atdb[i].id << " " << atdb[i].result << " p " << primes[i] << endl;
 		 SUM += atdb[i].result;
 	 }
 	 cout << "Final sum: " << SUM << endl;

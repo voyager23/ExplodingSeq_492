@@ -85,28 +85,29 @@ int main(int argc, char **argv)
 		//~ 1000000087,1000000093,1000000097,1000000103,1000000123,
 		//~ 1000000181,1000000207};
 		
-	calc_a_n_mod_p(997,1000);
+	//calc_a_n_mod_p(997,1000);
 	
-	const u64 mod = 997;	
+	const u64 mod = 1021;	
 	vector<u64> moduli = {mod};
 	vector<u64> results = {};
 	for(u64 &mod : moduli) {
 		u64 a = 1;
 		results.push_back(a);
-		for(unsigned n = 2; n != 1001; ++n) {
+		for(unsigned n = 2; n != 100001; ++n) {
+			if (n > 30) break; //DEBUG
 			a = ((6*a*a) + (10*a) + 3) % mod;
 			results.push_back(a);
 		}
-		cout << "a[1000]: mod " << mod << " = " << a << endl;
+
 		u64 index = 1;
 		for(u64 &r : results){
 			cout << index << ": " << r << endl;
 			index += 1;
 		}
-
+		cout << "a[10000]: mod " << mod << " = " << a << endl;
 	}
-	u64 c_length = cycle_length(mod);
-	cout << 1000 % c_length << endl;
-	return 0;
+	//~ u64 c_length = cycle_length(mod);
+	//~ cout << 1000 % c_length << endl;
+	//~ return 0;
 }
 
