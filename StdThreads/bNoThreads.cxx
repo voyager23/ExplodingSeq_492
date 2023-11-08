@@ -99,7 +99,7 @@ void thread_map_search(tdb *tdp) {
 u64 simple_search(u64 x, u64 y, u64 n) {
 	vector<u64> primes = prime_modulus(x,y);
 	
-	primes ={1021};
+	//primes ={1021};
 			
 	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
 	const uint64_t y =  200; // This gives 29 primes
 
 	primes = prime_modulus(x,y);
-	primes = {1021};
+	//primes = {1021};
 	std::vector<std::thread> vth;
 	std::array<tdb, num_threads> atdb;
 
