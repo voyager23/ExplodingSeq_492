@@ -120,9 +120,9 @@ u64 simple_search(u64 x, u64 y, u64 n) {
 //======================================================================
 int main(int argc, char **argv) {
 	
-	const uint64_t x = 100000;
+	const uint64_t x = 1000000;
 	const uint64_t y =  2000;
-	const uint64_t n = 100000;
+	const uint64_t n = 2000000;
 
 	primes = prime_modulus(x,y);
 	std::vector<std::thread> vth;
