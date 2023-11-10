@@ -120,9 +120,9 @@ u64 simple_search(u64 x, u64 y, u64 n) {
 //======================================================================
 int main(int argc, char **argv) {
 	
-	const uint64_t x = 1000000;
-	const uint64_t y =  2000;
-	const uint64_t n = 2000000;
+	const uint64_t x = 1000000000;			// 1e9
+	const uint64_t y =  1000;				// 1e3
+	const uint64_t n = 1000000000000000;	// 1e15
 
 	primes = prime_modulus(x,y);
 	std::vector<std::thread> vth;
@@ -152,7 +152,7 @@ int main(int argc, char **argv) {
 	 cout << "Search using " << num_threads << " threads." << endl;
 	 cout << "Final sum: " << SUM << endl << endl;
 	 
-	 cout << simple_search(x,y,n) << endl;
+	 //~ cout << simple_search(x,y,n) << endl;
 
 	 return 0;
  }
