@@ -49,17 +49,19 @@ void thread_map_search(tdb *tdp) {
 	// Sum each value to result variable.
 	// map values of 'a' to their respective idx
 	std::unordered_map<uint64_t, uint64_t> amapi;
+	std::unordered_map<uint64_t, uint64_t> map_empty = {};
 	// vector of sequential values of 'a' to enable recovery of the first index instance 
 	std::vector<uint64_t> a_seq;
+	std::vector<uint64_t> seq_empty = {};
 	pair<std::unordered_map<uint64_t, uint64_t>::iterator, bool> result;	// emplace return value
 	
 	tdp->result = 0;
 	for(size_t p = tdp->id; p < tdp->v_prime.size(); p += num_threads) {
 		// Preload reverse map {imapa}
-		a_seq.clear();
+		a_seq = seq_empty;
 		a_seq = {0,1,19};
 		// Preload search map {amapi}
-		amapi.clear(); 
+		amapi = map_empty; 
 		amapi.emplace(1,1); 
 		amapi.emplace(19,2);
 		//~ cout << 1 << endl << 19 << endl;
@@ -120,7 +122,9 @@ u64 simple_search(u64 x, u64 y, u64 n) {
 //======================================================================
 int main(int argc, char **argv) {
 	
-	const uint64_t x = 1000000000;			// 1e9
+	//~ Example 2 killed due to lack of memory space
+	
+	const uint64_t x = 100000000;			// 1e8
 	const uint64_t y =  1000;				// 1e3
 	const uint64_t n = 1000000000000000;	// 1e15
 
