@@ -102,7 +102,7 @@ void thread_map_search(tdb *tdp) {
 u64 simple_search(u64 x, u64 y, u64 n) {
 	vector<u64> primes = prime_modulus(x,y);
 	
-	//primes ={1021};
+	primes = {1000999};
 			
 	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
@@ -129,9 +129,12 @@ int main(int argc, char **argv) {
 
 	cout << "Calculating primes..." << endl;
 	primes = prime_modulus(x,y);
-	//~ primes = {1000000033};
-	cout << primes.size() << " primes. ";
 	
+	//~ DEBUG
+	primes = {1000999};
+	//~ end debug
+		
+	cout << primes.size() << " primes. ";
 	cout << primes.front() << " => " << primes.back() << endl;
 	
 	
@@ -172,11 +175,20 @@ int main(int argc, char **argv) {
 		uint64_t order = aseq.size() - 7;
 		uint64_t r = (n - 7) % order;
 		uint64_t aidx = 7 + r - 1;
-		cout << "index of a[n] = " << aidx << endl << endl;
-		// recover the final answer
+		cout << "index of a[n] = " << aidx << endl;
+		// recover the final answer a[100000] mod p
+		// a[2001] in blocks[2]
+		uint64_t bidx = aidx / 1000;
+		a = blocks[bidx]; // a[2001]
+		i = (bidx * 1000) + 1; // 2001
+		while(i != aidx){
+			a = (6*a*a + 10*a + 3) % p;
+			++i;
+		}// a now has required value
+		cout << "a[1000000] = " << a << endl;
 		
 		// Do a simple search based on specific values to confirm the result
-		
+		cout << simple_search(x,y,n) << endl;
 	}
 		
 	 return 0;
