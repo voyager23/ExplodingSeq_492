@@ -171,8 +171,12 @@ int main(int argc, char **argv) {
 		// contained in the finite field of size 'order'
 		uint64_t order = aseq.size() - 7;
 		uint64_t r = (n - 7) % order;
-		uint64_t an = order + r - 1;
-		cout << "an = " << an << endl << endl;
+		uint64_t aidx = 7 + r - 1;
+		cout << "index of a[n] = " << aidx << endl << endl;
+		// recover the final answer
+		
+		// Do a simple search based on specific values to confirm the result
+		
 	}
 		
 	 return 0;
