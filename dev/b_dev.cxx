@@ -161,7 +161,9 @@ int main(int argc, char **argv) {
 			a = (6*a*a + 10*a + 3) % p;
 			aseq.push_back(a);
 			i++;
-			if((i % 1000)==1) blocks.push_back(a); // push_back a[nnn001]
+			if((i % 1000)==1){ 
+				blocks.push_back(a); // push_back a[nnn001]
+			}
 		}while(aseq.back() != aseq.at(6));	// compare to a[7]
 		
 		for(auto b = aseq.begin(); b != aseq.begin() + 7; ++b)   cout << *b << " ";
@@ -174,14 +176,14 @@ int main(int argc, char **argv) {
 		// contained in the finite field of size 'order'
 		uint64_t order = aseq.size() - 7;
 		uint64_t r = (n - 7) % order;
-		uint64_t aidx = 7 + r - 1;
+		uint64_t aidx = 7 + r;
 		cout << "index of a[n] = " << aidx << endl;
 		// recover the final answer a[100000] mod p
 		// a[2001] in blocks[2]
 		uint64_t bidx = aidx / 1000;
 		a = blocks[bidx]; // a[2001]
 		i = (bidx * 1000) + 1; // 2001
-		while(i != aidx){
+		while(i != (aidx)){
 			a = (6*a*a + 10*a + 3) % p;
 			++i;
 		}// a now has required value
