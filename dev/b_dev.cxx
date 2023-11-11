@@ -14,6 +14,7 @@ using u128 = __uint128_t;
 // Globals
 static const int num_threads = 8;
 std::vector<uint64_t> primes;	// Referenced in Thread data block
+
 // Thread data block
 typedef struct {
 	size_t id;
@@ -122,49 +123,57 @@ u64 simple_search(u64 x, u64 y, u64 n) {
 //======================================================================
 int main(int argc, char **argv) {
 	
-	//~ Example 2 killed due to lack of memory space
-	
-	const uint64_t x = 1000000000;			// 1e9
-	const uint64_t y =  10000000;				// 1e7
-	const uint64_t n = 1000000000000000;	// 1e15
+	const uint64_t x = 1000000;		// 1e6
+	const uint64_t y =  1000;		// 1e3
+	const uint64_t n = 1000000;		// 1e6
 
 	cout << "Calculating primes..." << endl;
 	primes = prime_modulus(x,y);
+	//~ primes = {1000000033};
+	cout << primes.size() << " primes. ";
 	
-	// DEBUG START
 	cout << primes.front() << " => " << primes.back() << endl;
-	cout << (2359*2359*6 + 2359*10 + 3) << endl;
-	exit(0);
-	// DEBUG END
 	
-	std::vector<std::thread> vth;
-	std::array<tdb, num_threads> atdb;
-
-	 //Launch a team of threads
-	 for (size_t i = 0; i < num_threads; ++i) {
-		 // setup a thread data block
-		 tdb *p = atdb.data() + i;
-		 p->id = i; p->n = n; p->result = 0;
-		 
-		 // setup a thread
-		 vth.push_back(std::thread(thread_map_search, p));
-		 // thread_map_search(p);
-	 }
-	 //std::cout << "Launched from the main\n";
-
-	 //Join the threads with the main thread
-	 for( auto i = vth.begin(); i != vth.end(); i++) i->join();
-	 
-	 // Scan/print the tdb array
-	 uint SUM = 0;
-	 for(auto i = 0; i < num_threads; ++i){
-		 //cout << atdb[i].id << " " << atdb[i].result << endl;
-		 SUM += atdb[i].result;
-	 }
-	 cout << "Search using " << num_threads << " threads." << endl;
-	 cout << "Final sum: " << SUM << endl << endl;
-	 
-	 //~ cout << simple_search(x,y,n) << endl;
-
+	
+	std::vector<uint64_t> aseq;
+	std::vector<uint64_t> blocks;
+	for(auto p : primes) {
+		blocks = {1}; //a[1] = 1. Special case
+		aseq = {1,19,2359,33412879};
+		uint64_t a = 33412879;
+		uint64_t i = 4;
+		// calc and push a[5]
+		a = (6*a*a + 10*a + 3) % p;
+		++i;
+		aseq.push_back(a);
+		// calc and push a[6]
+		a = (6*a*a + 10*a + 3) % p;
+		++i;
+		aseq.push_back(a);
+		// calc and push a[7]
+		a = (6*a*a + 10*a + 3) % p;
+		++i;
+		aseq.push_back(a);	// Using a[7] as block start value
+		do {
+			a = (6*a*a + 10*a + 3) % p;
+			aseq.push_back(a);
+			i++;
+			if((i % 1000)==1) blocks.push_back(a); // push_back a[nnn001]
+		}while(aseq.back() != aseq.at(6));	// compare to a[7]
+		
+		for(auto b = aseq.begin(); b != aseq.begin() + 7; ++b)   cout << *b << " ";
+		cout << "  <>  ";
+		for(auto c = aseq.rbegin(); c != aseq.rbegin() + 7; ++c) cout << *c << " ";
+		cout << " size: " << aseq.size() << endl;
+		cout << "order:" << aseq.size() - 7 << " modulus:" << p << endl;
+		cout << "blocks:" << blocks.size() << endl;
+		// based on these variables find the index of a[n] 
+		// contained in the finite field of size 'order'
+		uint64_t order = aseq.size() - 7;
+		uint64_t r = (n - 7) % order;
+		uint64_t an = order + r - 1;
+		cout << "an = " << an << endl << endl;
+	}
+		
 	 return 0;
  }

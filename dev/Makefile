@@ -1,7 +1,15 @@
 # makefile for dev folder
 
-EXE=../bin/modchk
+EXE=../bin/bdev
 
+bdev : b_dev.cxx
+	g++ -std=c++17 -g b_dev.cxx -o $(EXE)
+	
+#........................................
+
+adev : a_dev.cxx
+	g++ -std=c++17 -g a_dev.cxx -o $(EXE)
+	
 mod_chk : mod_chk.cxx
 	g++ -std=c++17 -g mod_chk.cxx -o $(EXE)
 	 

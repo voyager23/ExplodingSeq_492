@@ -125,46 +125,46 @@ int main(int argc, char **argv) {
 	//~ Example 2 killed due to lack of memory space
 	
 	const uint64_t x = 1000000000;			// 1e9
-	const uint64_t y =  10000000;				// 1e7
+	const uint64_t y =  1000;				// 1e7
 	const uint64_t n = 1000000000000000;	// 1e15
 
 	cout << "Calculating primes..." << endl;
 	primes = prime_modulus(x,y);
+	cout << primes.size() << " primes. ";
 	
-	// DEBUG START
 	cout << primes.front() << " => " << primes.back() << endl;
-	cout << (2359*2359*6 + 2359*10 + 3) << endl;
-	exit(0);
-	// DEBUG END
 	
-	std::vector<std::thread> vth;
-	std::array<tdb, num_threads> atdb;
-
-	 //Launch a team of threads
-	 for (size_t i = 0; i < num_threads; ++i) {
-		 // setup a thread data block
-		 tdb *p = atdb.data() + i;
-		 p->id = i; p->n = n; p->result = 0;
-		 
-		 // setup a thread
-		 vth.push_back(std::thread(thread_map_search, p));
-		 // thread_map_search(p);
-	 }
-	 //std::cout << "Launched from the main\n";
-
-	 //Join the threads with the main thread
-	 for( auto i = vth.begin(); i != vth.end(); i++) i->join();
-	 
-	 // Scan/print the tdb array
-	 uint SUM = 0;
-	 for(auto i = 0; i < num_threads; ++i){
-		 //cout << atdb[i].id << " " << atdb[i].result << endl;
-		 SUM += atdb[i].result;
-	 }
-	 cout << "Search using " << num_threads << " threads." << endl;
-	 cout << "Final sum: " << SUM << endl << endl;
-	 
-	 //~ cout << simple_search(x,y,n) << endl;
-
+	//~ cout << (2359*2359*6 + 2359*10 + 3) << endl;
+	//~ exit(0);
+	//~ // DEBUG END
+	
+	std::vector<uint64_t> aseq;
+	for(auto p : primes) {
+		aseq = {1,19,2359,33412879};
+		uint64_t a = 33412879;
+		uint64_t i = 4;
+		// calc and push a[5]
+		a = (6*a*a + 10*a + 3) % p;
+		++i;
+		aseq.push_back(a);
+		// calc and push a[6]
+		a = (6*a*a + 10*a + 3) % p;
+		++i;
+		aseq.push_back(a);
+		
+		do {
+			a = (6*a*a + 10*a + 3) % p;
+			aseq.push_back(a);
+			i++;
+		}while(aseq.back() != aseq.at(5));	// compare to a[6]
+		
+		for(auto b = aseq.begin(); b != aseq.begin() + 6; ++b)   cout << *b << " ";
+		cout << "  <>  ";
+		for(auto c = aseq.rbegin(); c != aseq.rbegin() + 6; ++c) cout << *c << " ";
+		cout << " size: " << aseq.size() << endl;
+		cout << "order:" << aseq.size()-6 << " modulus:" << p; 
+		cout<<endl<<endl;;
+	}
+		
 	 return 0;
  }
