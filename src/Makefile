@@ -1,6 +1,6 @@
 # Makefile for source folder
 
-EXE=../bin/bmk
+EXE=../bin/bsoln
 
 bmk : bookmark.cxx
 	g++ -std=c++17  bookmark.cxx -o $(EXE)

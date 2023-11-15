@@ -1,5 +1,5 @@
 /*
- * a_snip.cxx
+ * b_snip.cxx
  * 
  * Copyright 2023 Mike <mike@fedora38-2.home>
  * 
@@ -36,7 +36,8 @@ int main(int argc, char **argv)
 	
 	const uint64_t p = 10459;
 	const uint64_t n = 1000000000;
-	
+	// record intermediate stages of the order search
+	vector<uint64_t> state = {0};	
 	uint64_t a = 1;
 	uint64_t i = 1;
 	uint64_t a7 = 1;
@@ -52,6 +53,7 @@ int main(int argc, char **argv)
 	do{
 		a = (6*a*a + 10*a + 3) % p;
 		i += 1;
+		if((i % 100)==0) state.push_back(a);	// state for i=100 will be in slot 1 etc...
 		cout << "i:" << i << " a:" << a << "\t";
 	}while(a != a7);
 	uint64_t order = (i - 7);
@@ -67,6 +69,16 @@ int main(int argc, char **argv)
 		i += 1;
 	}
 	cout << "Predicted \ta[" << n << "] = " << a << endl;
+	
+	// Use state vector to find result
+	a = state[target_idx / 100];
+	i = ((target_idx / 100) * 100);
+	while(i != target_idx){
+		a = ((6*a*a + 10*a + 3) % p);
+		i += 1;
+	}
+	cout << "Derived from state vector \ta[" << n << "] = " << a << endl;
+	
 	// confirm with a simple_search
 	i = 1; a = 1;
 	while(i != n) {

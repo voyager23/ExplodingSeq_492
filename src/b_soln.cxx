@@ -117,7 +117,7 @@ u64 cyclic_search(u32 x, u32 y, u64 n) {
 		size_t cycle_length = idx - 6;
 		size_t result_idx = n % cycle_length;
 		u64 a_n = A.at(result_idx);
-		cout << a_n << "\tcycle: " << cycle_length << endl;
+		cout << a_n << "\tcycle: " << cycle_length << "\tp = " << p << endl;
 		B += a_n;
 	}
 	

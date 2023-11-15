@@ -1,6 +1,12 @@
 # makefile for dev folder
 
-EXE=../bin/bdev
+EXE=../bin/csnip
+
+csnip : c_snip.cxx
+	g++ -std=c++17 -g c_snip.cxx -o $(EXE)
+	
+bsnip : b_snip.cxx
+	g++ -std=c++17 -g b_snip.cxx -o $(EXE)
 
 bdev : b_dev.cxx
 	g++ -std=c++17 -g b_dev.cxx -o $(EXE)
@@ -30,7 +36,10 @@ rw : rw_mpz_t.cxx
 	
 limit : limit.cxx
 	g++ -std=c++17 limit.cxx -o ../bin/limit 
-
+#--------------------------------------
+db :
+	gdb $(EXE)
 run :
 	$(EXE)
+#--------------------------------------
 	
