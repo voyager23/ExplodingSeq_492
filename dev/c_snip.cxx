@@ -35,8 +35,9 @@ int main(int argc, char **argv)
 	//~ const uint64_t p = 2137;
 	
 	const uint64_t x = 1e9;
-	const uint64_t y = 5e3;
+	const uint64_t y = 1e4;
 	const uint64_t n = 1e15;
+	const uint64_t chkpnt = 10000;
 	vector<uint64_t> primes;
 	
 	// state vector records intermediate stages of the search
@@ -62,7 +63,7 @@ int main(int argc, char **argv)
 		do{
 			a = (6*a*a + 10*a + 3) % p;
 			i += 1;
-			if((i % 100)==0) state.push_back(a);	// state for i=100 will be in slot 1 etc...
+			if((i % chkpnt)==0) state.push_back(a);	// state for i=100 will be in slot 1 etc...
 			//~ cout << "i:" << i << " a:" << a << "\t";
 		}while(a != a7);
 		uint64_t order = (i - 7);
@@ -73,8 +74,8 @@ int main(int argc, char **argv)
 		cout << "target index:" << target_idx << endl;
 		
 		// Use state vector to find result
-		a = state[target_idx / 100];
-		i = ((target_idx / 100) * 100);
+		a = state[target_idx / chkpnt];
+		i = ((target_idx / chkpnt) * chkpnt);
 		while(i != target_idx){
 			a = ((6*a*a + 10*a + 3) % p);
 			i += 1;
