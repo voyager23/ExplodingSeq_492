@@ -100,10 +100,13 @@ void thread_map_search(tdb *tdp) {
 // ---------------------------------------------------------------------
 
 u64 simple_search(u64 x, u64 y, u64 n) {
-	//~ vector<u64> primes = prime_modulus(x,y);
+	//~ vector<u64> primes = prime_modulus(x,y);	
+	//~ vector<u64> primes = {1000981,1000003987};
 	
-	vector<u64> primes = {1000981,1000003987};
-			
+	// DEBUG
+	vector<u64> primes = {1900111,1001456501};
+	// END DEBUG
+	
 	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
 
@@ -114,7 +117,7 @@ u64 simple_search(u64 x, u64 y, u64 n) {
 			idx += 1;
 			a = (6*a*a + 10*a + 3) % p;
 		} // while...
-		cout << "simple search a[" << n << "] = "<< a << " % " << p << endl;
+		cout << "simple search a[" << n << "] = "<< a << " (mod) " << p << endl;
 		B = (B + a);
 	} // for...
 	return B;
@@ -131,10 +134,11 @@ int main(int argc, char **argv) {
 	//~ primes = prime_modulus(x,y);
 	
 	//~ DEBUG
-	primes = {1000981,1000003987};
+	//primes = {1000981,1000003987};
+	primes = {1900111,1001456501};
 	//~ end debug
 		
-	cout << primes.size() << " primes. ";
+	cout << endl << primes.size() << " primes. ";
 	cout << primes.front() << " => " << primes.back() << endl;
 	
 	
@@ -170,8 +174,8 @@ int main(int argc, char **argv) {
 		cout << "  <>  ";
 		for(auto c = aseq.rbegin(); c != aseq.rbegin() + 7; ++c) cout << *c << " ";
 		cout << " size: " << aseq.size() << endl;
-		cout << "order:" << aseq.size() - 7 << " modulus:" << p << endl;
-		cout << "blocks:" << blocks.size() << endl;
+		cout << "order:" << aseq.size() - 7 << "  modulus:" << p;
+		cout << "  blocks:" << blocks.size() << endl;
 		// based on these variables find the index of a[n] 
 		// contained in the finite field of size 'order'
 		uint64_t order = aseq.size() - 7;
