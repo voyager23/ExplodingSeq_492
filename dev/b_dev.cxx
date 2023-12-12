@@ -100,9 +100,9 @@ void thread_map_search(tdb *tdp) {
 // ---------------------------------------------------------------------
 
 u64 simple_search(u64 x, u64 y, u64 n) {
-	vector<u64> primes = prime_modulus(x,y);
+	//~ vector<u64> primes = prime_modulus(x,y);
 	
-	primes = {1000981,1000003987};
+	vector<u64> primes = {1000981,1000003987};
 			
 	cout << "Simple search. Primes has " << primes.size() << " values." << endl;
 	cout << primes.front() << " -> " << primes.back() << endl;
@@ -114,7 +114,7 @@ u64 simple_search(u64 x, u64 y, u64 n) {
 			idx += 1;
 			a = (6*a*a + 10*a + 3) % p;
 		} // while...
-		//cout << "simple search a[100000] = " << a << " % " << p << endl;
+		cout << "simple search a[" << n << "] = "<< a << " % " << p << endl;
 		B = (B + a);
 	} // for...
 	return B;
@@ -127,8 +127,8 @@ int main(int argc, char **argv) {
 	const uint64_t y =  1000;		// 1e3
 	const uint64_t n = 1000000000;		// 1e6
 
-	cout << "Calculating primes..." << endl;
-	primes = prime_modulus(x,y);
+	//~ cout << "Calculating primes..." << endl;
+	//~ primes = prime_modulus(x,y);
 	
 	//~ DEBUG
 	primes = {1000981,1000003987};
@@ -187,11 +187,9 @@ int main(int argc, char **argv) {
 			a = (6*a*a + 10*a + 3) % p;
 			++i;
 		}// a now has required value
-		cout << "a[1000000000] = " << a << endl;
-		
-		// Do a simple search based on specific values to confirm the result
-		cout << simple_search(x,y,n) << endl;
+		cout << "Result a[1000000000] = " << a << endl << endl;
 	}
-		
-	 return 0;
- }
+	// Do a simple search based on specific values to confirm the result
+	cout << "Simple search B:" << simple_search(x,y,n) << endl << endl;		
+	return 0;
+}

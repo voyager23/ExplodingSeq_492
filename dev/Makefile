@@ -6,10 +6,10 @@ csnip : c_snip.cxx
 	g++ -std=c++17 -g c_snip.cxx -o $(EXE)
 	
 bsnip : b_snip.cxx
-	g++ -std=c++17 -g b_snip.cxx -o $(EXE)
+	g++ -std=c++17 -g b_snip.cxx -o ../bin/bsnip
 
 bdev : b_dev.cxx
-	g++ -std=c++17 -g b_dev.cxx -o $(EXE)
+	g++ -std=c++17 -g b_dev.cxx -o ../bin/bdev
 	
 #........................................
 
